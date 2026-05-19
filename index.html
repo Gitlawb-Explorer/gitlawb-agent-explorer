@@ -4,11 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GitLawB Explorer</title>
+<meta name="description" content="Real-time trust intelligence for the GitLawB decentralized agent network. Browse agents, inspect trust scores, explore network topology.">
+<link rel="canonical" href="https://gitlawb-explorer.github.io/gitlawb-agent-explorer/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="GitLawB Explorer">
+<meta property="og:description" content="Real-time trust intelligence for the GitLawB decentralized agent network.">
+<meta property="og:url" content="https://gitlawb-explorer.github.io/gitlawb-agent-explorer/">
+<meta property="og:image" content="https://gitlawb-explorer.github.io/gitlawb-agent-explorer/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="GitLawB Explorer">
+<meta name="twitter:description" content="Real-time trust intelligence for the GitLawB decentralized agent network.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230A0A0C'/%3E%3Ccircle cx='50' cy='50' r='30' stroke='%235e6ad2' stroke-width='4' fill='none'/%3E%3Ccircle cx='50' cy='50' r='10' fill='%235e6ad2'/%3E%3Cline x1='50' y1='20' x2='50' y2='30' stroke='%235e6ad2' stroke-width='4'/%3E%3Cline x1='50' y1='70' x2='50' y2='80' stroke='%235e6ad2' stroke-width='4'/%3E%3Cline x1='20' y1='50' x2='30' y2='50' stroke='%235e6ad2' stroke-width='4'/%3E%3Cline x1='70' y1='50' x2='80' y2='50' stroke='%235e6ad2' stroke-width='4'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ── RESET ──────────────────────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0a0a0c;color:#e8e8ec;line-height:1.5;overflow-x:hidden;font-feature-settings:'cv01','ss03'}
@@ -17,23 +27,20 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 input,select{font-family:inherit}
 a{text-decoration:none;color:inherit}
 :focus-visible{outline:2px solid rgba(94,106,210,0.5);outline-offset:2px}
-
-/* ── SCROLLBAR ─────────────────────────────────────── */
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.1)}
 
-/* ── LAYOUT ─────────────────────────────────────────── */
 .app{display:grid;grid-template-columns:240px 1fr;grid-template-rows:48px 1fr;height:100vh;overflow:hidden}
 
-/* ── TOPBAR ─────────────────────────────────────────── */
 .topbar{grid-column:1/-1;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;padding:0 20px;gap:16px;background:rgba(10,10,12,0.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:50}
 .topbar__brand{display:flex;align-items:center;gap:8px;margin-right:8px}
 .topbar__logo{width:22px;height:22px;color:#5e6ad2}
 .topbar__name{font-size:14px;font-weight:600;color:#f0f0f4;letter-spacing:-0.02em}
 .topbar__sep{color:#2a2a30;font-size:14px}
 .topbar__page{font-size:13px;font-weight:500;color:#6b6b78}
+.topbar__hamburger{display:none;width:28px;height:28px;border-radius:6px;align-items:center;justify-content:center;color:#6b6b78}
 .topbar__search{flex:1;max-width:420px;margin:0 auto;position:relative}
 .topbar__search-input{width:100%;padding:6px 12px 6px 32px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;color:#e8e8ec;font-size:13px;transition:all 0.15s ease;outline:none}
 .topbar__search-input::placeholder{color:#4a4a55}
@@ -41,23 +48,24 @@ a{text-decoration:none;color:inherit}
 .topbar__search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#4a4a55;pointer-events:none}
 .topbar__search-kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;font-family:'JetBrains Mono',monospace;color:#3a3a44;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px;padding:1px 5px}
 .topbar__right{display:flex;align-items:center;gap:12px}
+.topbar__mobile-search{display:none;width:28px;height:28px;border-radius:6px;align-items:center;justify-content:center;color:#6b6b78}
 .topbar__live{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#27a644}
 .topbar__live-dot{width:5px;height:5px;border-radius:50%;background:#27a644;animation:livePulse 2s ease infinite}
 @keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 4px rgba(39,166,68,0.4)}50%{opacity:0.5;box-shadow:0 0 8px rgba(39,166,68,0.6)}}
 .topbar__nodes{font-size:11px;font-family:'JetBrains Mono',monospace;color:#4a4a55}
+.topbar__updated{font-size:10px;font-family:'JetBrains Mono',monospace;color:#3a3a44}
+.topbar__updated-flash{animation:flashGreen 0.5s ease}
+@keyframes flashGreen{0%{color:#27a644}100%{color:#3a3a44}}
 
-/* ── SIDEBAR ────────────────────────────────────────── */
 .sidebar{border-right:1px solid rgba(255,255,255,0.05);overflow-y:auto;padding:12px 0;background:rgba(10,10,12,0.5)}
 .sidebar__section{margin-bottom:8px}
 .sidebar__label{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#3a3a44;padding:8px 16px 4px}
-.sidebar__link{display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:13px;font-weight:500;color:#6b6b78;transition:all 0.12s ease;border-left:2px solid transparent}
+.sidebar__link{display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:13px;font-weight:500;color:#6b6b78;transition:all 0.12s ease;border-left:2px solid transparent;cursor:pointer}
 .sidebar__link:hover{color:#b0b0bc;background:rgba(255,255,255,0.02)}
 .sidebar__link--active{color:#e8e8ec;background:rgba(94,106,210,0.06);border-left-color:#5e6ad2}
 .sidebar__link svg{width:15px;height:15px;opacity:0.6;flex-shrink:0}
 .sidebar__link--active svg{opacity:1;color:#5e6ad2}
 .sidebar__link-count{margin-left:auto;font-size:11px;font-family:'JetBrains Mono',monospace;color:#3a3a44}
-
-/* Sidebar agents */
 .sidebar__agent{display:flex;align-items:center;gap:8px;padding:5px 16px;font-size:12px;font-family:'JetBrains Mono',monospace;color:#4a4a55;transition:all 0.12s ease;cursor:pointer}
 .sidebar__agent:hover{color:#8a8a96;background:rgba(255,255,255,0.02)}
 .sidebar__agent-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
@@ -67,23 +75,24 @@ a{text-decoration:none;color:inherit}
 .sidebar__agent-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sidebar__agent-status{font-size:10px;color:#3a3a44}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-
 .sidebar__network{margin-top:8px;padding:12px 16px;border-top:1px solid rgba(255,255,255,0.04)}
 .sidebar__network-title{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;margin-bottom:8px}
 .sidebar__network-stat{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
 .sidebar__network-stat-label{color:#4a4a55}
 .sidebar__network-stat-value{color:#6b6b78;font-family:'JetBrains Mono',monospace}
 
-/* ── MAIN CONTENT ───────────────────────────────────── */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;backdrop-filter:blur(2px)}
+
 .main{overflow-y:auto;overflow-x:hidden}
 .main__inner{padding:24px 32px 48px;max-width:1100px}
 
-/* ── DASHBOARD HEADER ───────────────────────────────── */
 .dash-header{margin-bottom:32px}
 .dash-header__title{font-size:28px;font-weight:600;letter-spacing:-0.04em;color:#f0f0f4;margin-bottom:4px}
 .dash-header__sub{font-size:14px;color:#6b6b78}
 
-/* ── STAT CARDS ─────────────────────────────────────── */
+.view{display:none}
+.view.active{display:block}
+
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px}
 .stat-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(94,106,210,0.2),transparent)}
@@ -92,9 +101,7 @@ a{text-decoration:none;color:inherit}
 .stat-card__change{font-size:11px;font-weight:600;margin-top:4px;display:inline-flex;align-items:center;gap:3px}
 .stat-card__change--up{color:#27a644}
 .stat-card__change--down{color:#e5484d}
-.stat-card__spark{position:absolute;bottom:0;right:0;opacity:0.15}
 
-/* ── NETWORK GRAPH ──────────────────────────────────── */
 .network-viz{background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:24px;margin-bottom:32px;position:relative;overflow:hidden}
 .network-viz__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .network-viz__title{font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#4a4a55}
@@ -103,10 +110,8 @@ a{text-decoration:none;color:inherit}
 .network-viz__legend-dot{width:6px;height:6px;border-radius:50%}
 .network-viz canvas{width:100%;height:220px;display:block}
 
-/* ── DUAL PANEL ─────────────────────────────────────── */
 .dual-panel{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
 
-/* ── ACTIVITY FEED ──────────────────────────────────── */
 .feed{background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden}
 .feed__header{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:space-between}
 .feed__title{font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#4a4a55}
@@ -125,7 +130,6 @@ a{text-decoration:none;color:inherit}
 .feed__item-text strong{color:#e8e8ec;font-weight:600}
 .feed__item-time{font-size:10px;color:#3a3a44;font-family:'JetBrains Mono',monospace;margin-top:2px}
 
-/* ── TOP AGENTS ─────────────────────────────────────── */
 .top-agents{background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden}
 .top-agents__header{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:space-between}
 .top-agents__title{font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#4a4a55}
@@ -139,7 +143,6 @@ a{text-decoration:none;color:inherit}
 .top-agent__meta{font-size:10px;color:#4a4a55;font-family:'JetBrains Mono',monospace}
 .top-agent__trust{font-size:13px;font-weight:600;font-family:'JetBrains Mono',monospace}
 
-/* ── AGENTS TABLE ───────────────────────────────────── */
 .agents-section{margin-bottom:32px}
 .agents-section__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .agents-section__title{font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#4a4a55}
@@ -149,7 +152,6 @@ a{text-decoration:none;color:inherit}
 .filter-chip:hover{color:#b0b0bc;background:rgba(255,255,255,0.04)}
 .filter-chip--active{color:#e8e8ec;background:rgba(94,106,210,0.1);border-color:rgba(94,106,210,0.25)}
 
-/* ── TABLE ──────────────────────────────────────────── */
 .table-wrap{background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden}
 .table{width:100%;border-collapse:collapse}
 .table th{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;text-align:left;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.01);position:sticky;top:0}
@@ -176,30 +178,55 @@ a{text-decoration:none;color:inherit}
 .table__tags{display:flex;gap:3px;flex-wrap:wrap}
 .table__tag{font-size:10px;color:#6b6b78;padding:1px 6px;border-radius:3px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04)}
 .table__meta{font-size:11px;font-family:'JetBrains Mono',monospace;color:#4a4a55}
+.table__check{width:16px;height:16px;border-radius:3px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s}
+.table__check.checked{background:#5e6ad2;border-color:#5e6ad2}
+.table__check.checked::after{content:'\2713';color:#fff;font-size:10px}
 
-/* ── DETAIL PANEL ───────────────────────────────────── */
+.compare-bar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111114;border:1px solid rgba(94,106,210,0.3);border-radius:10px;padding:10px 20px;display:none;align-items:center;gap:12px;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.compare-bar.show{display:flex}
+.compare-bar__text{font-size:13px;font-weight:500;color:#e8e8ec}
+.compare-bar__btn{font-size:12px;font-weight:600;color:#fff;background:#5e6ad2;padding:6px 14px;border-radius:6px}
+.compare-bar__btn:hover{background:#7170ff}
+.compare-bar__cancel{font-size:12px;color:#6b6b78;padding:6px 10px}
+
+.compare-panel{position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center}
+.compare-panel.open{display:flex}
+.compare-panel__box{background:#0e0e10;border:1px solid rgba(255,255,255,0.06);border-radius:14px;width:90%;max-width:800px;max-height:80vh;overflow-y:auto;padding:24px}
+.compare-panel__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.compare-panel__title{font-size:16px;font-weight:600;color:#f0f0f4}
+.compare-panel__close{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#6b6b78}
+.compare-panel__close:hover{background:rgba(255,255,255,0.06);color:#e8e8ec}
+.compare-grid{display:grid;gap:16px}
+.compare-grid--2{grid-template-columns:1fr 1fr}
+.compare-grid--3{grid-template-columns:1fr 1fr 1fr}
+.compare-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:10px;padding:16px}
+.compare-card__name{font-size:15px;font-weight:600;color:#e8e8ec;margin-bottom:12px}
+.compare-card__row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.025)}
+.compare-card__row:last-child{border:none}
+.compare-card__label{font-size:12px;color:#6b6b78}
+.compare-card__val{font-size:12px;font-weight:600;color:#e8e8ec;font-family:'JetBrains Mono',monospace}
+
 .detail{position:fixed;top:0;right:-520px;width:520px;height:100vh;background:#0e0e10;border-left:1px solid rgba(255,255,255,0.06);z-index:200;transition:right 0.3s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;overscroll-behavior:contain}
 .detail.open{right:0}
 .detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:199;opacity:0;pointer-events:none;transition:opacity 0.3s ease;backdrop-filter:blur(2px)}
 .detail-overlay.open{opacity:1;pointer-events:all}
-
 .detail__head{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0e0e10;z-index:1}
 .detail__head-title{font-size:13px;font-weight:600;color:#e8e8ec}
+.detail__head-actions{display:flex;gap:6px}
+.detail__share{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#6b6b78;padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,0.06);transition:all 0.12s}
+.detail__share:hover{color:#b0b0bc;background:rgba(255,255,255,0.04)}
 .detail__close{width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#6b6b78;transition:all 0.12s ease}
 .detail__close:hover{background:rgba(255,255,255,0.06);color:#e8e8ec}
-
 .detail__agent{padding:24px;display:flex;gap:16px;align-items:flex-start}
 .detail__avatar{width:52px;height:52px;border-radius:12px;background:rgba(94,106,210,0.1);border:1px solid rgba(94,106,210,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:#7170ff;flex-shrink:0}
 .detail__agent-info{flex:1}
 .detail__name{font-size:20px;font-weight:600;letter-spacing:-0.03em;color:#f0f0f4;margin-bottom:2px}
 .detail__did{font-size:11px;font-family:'JetBrains Mono',monospace;color:#3a3a44;word-break:break-all}
 .detail__status-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:3px 8px;border-radius:9999px;margin-top:8px}
-
 .detail__trust-card{margin:0 24px 20px;padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:10px;text-align:center}
 .detail__trust-score{font-size:44px;font-weight:700;letter-spacing:-0.04em;font-feature-settings:'tnum'}
 .detail__trust-label{font-size:11px;font-weight:500;color:#4a4a55;margin-top:2px}
 .detail__trust-delta{font-size:12px;font-weight:600;margin-top:4px}
-
 .detail__breakdown{padding:0 24px;margin-bottom:20px}
 .detail__breakdown-title{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;margin-bottom:10px}
 .detail__comp{display:flex;align-items:center;gap:10px;padding:6px 0}
@@ -207,19 +234,16 @@ a{text-decoration:none;color:inherit}
 .detail__comp-bar{flex:1;height:4px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
 .detail__comp-fill{height:100%;border-radius:2px;transition:width 0.5s ease}
 .detail__comp-val{font-size:11px;font-family:'JetBrains Mono',monospace;color:#6b6b78;width:36px;text-align:right}
-
 .detail__grid{padding:0 24px;margin-bottom:20px}
 .detail__grid-title{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;margin-bottom:10px}
 .detail__grid-items{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .detail__grid-item{padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:8px}
 .detail__grid-label{font-size:10px;font-weight:500;color:#3a3a44;margin-bottom:3px}
 .detail__grid-value{font-size:13px;font-weight:600;color:#e8e8ec;font-feature-settings:'tnum'}
-
 .detail__caps{padding:0 24px;margin-bottom:20px}
 .detail__caps-title{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;margin-bottom:10px}
 .detail__caps-list{display:flex;flex-wrap:wrap;gap:4px}
 .detail__cap{font-size:11px;font-weight:500;color:#6b6b78;padding:3px 8px;border-radius:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05)}
-
 .detail__timeline{padding:0 24px 24px}
 .detail__timeline-title{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;margin-bottom:10px}
 .detail__tl-item{display:flex;gap:10px;padding:6px 0;position:relative}
@@ -229,7 +253,6 @@ a{text-decoration:none;color:inherit}
 .detail__tl-text{font-size:12px;color:#b0b0bc;line-height:1.4}
 .detail__tl-time{font-size:10px;color:#3a3a44;font-family:'JetBrains Mono',monospace;margin-top:2px}
 
-/* ── COMMAND PALETTE ────────────────────────────────── */
 .cmd-palette{position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;display:flex;align-items:flex-start;justify-content:center;padding-top:20vh;opacity:0;pointer-events:none;transition:opacity 0.15s ease}
 .cmd-palette.open{opacity:1;pointer-events:all}
 .cmd-palette__backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px)}
@@ -244,12 +267,43 @@ a{text-decoration:none;color:inherit}
 .cmd-palette__item-name{font-size:13px;font-weight:500;color:#e8e8ec}
 .cmd-palette__item-meta{font-size:11px;color:#4a4a55;font-family:'JetBrains Mono',monospace}
 
-/* ── FOOTER ─────────────────────────────────────────── */
+.about-section{max-width:640px}
+.about-section h2{font-size:20px;font-weight:600;color:#f0f0f4;margin-bottom:8px;letter-spacing:-0.02em}
+.about-section h3{font-size:14px;font-weight:600;color:#b0b0bc;margin:24px 0 8px}
+.about-section p{font-size:14px;color:#6b6b78;line-height:1.7;margin-bottom:12px}
+.about-section a{color:#5e6ad2;text-decoration:underline;text-decoration-color:rgba(94,106,210,0.3)}
+.about-section a:hover{text-decoration-color:#5e6ad2}
+.about-section code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:2px 6px;color:#b0b0bc}
+.about-links{display:flex;gap:8px;margin-top:16px}
+.about-link{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:#e8e8ec;padding:8px 16px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);transition:all 0.12s}
+.about-link:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1)}
+
+.skeleton{background:linear-gradient(90deg,rgba(255,255,255,0.03) 25%,rgba(255,255,255,0.06) 50%,rgba(255,255,255,0.03) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton-card{height:100px;border-radius:10px}
+.skeleton-row{height:44px;border-radius:4px;margin-bottom:4px}
+.skeleton-feed{height:48px;border-radius:4px;margin-bottom:4px}
+
+.toast{position:fixed;bottom:24px;right:24px;background:#111114;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 16px;font-size:13px;color:#e8e8ec;z-index:400;transform:translateY(20px);opacity:0;transition:all 0.2s ease;box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast--success{border-color:rgba(39,166,68,0.3)}
+.toast--error{border-color:rgba(229,72,77,0.3)}
+
 .footer-bar{padding:16px 32px;border-top:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#3a3a44}
 .footer-bar a{color:#4a4a55;transition:color 0.12s}
 .footer-bar a:hover{color:#8a8a96}
 
-/* ── RESPONSIVE ─────────────────────────────────────── */
+.error-banner{background:rgba(229,72,77,0.08);border:1px solid rgba(229,72,77,0.15);border-radius:8px;padding:12px 16px;margin-bottom:24px;display:none;align-items:center;gap:10px;font-size:13px;color:#e5484d}
+.error-banner.show{display:flex}
+.error-banner svg{flex-shrink:0}
+.error-banner__msg{flex:1}
+.error-banner__retry{font-size:12px;font-weight:500;color:#e5484d;padding:4px 10px;border:1px solid rgba(229,72,77,0.2);border-radius:4px}
+.error-banner__retry:hover{background:rgba(229,72,77,0.1)}
+
+.empty-state{text-align:center;padding:48px 24px;color:#3a3a44}
+.empty-state__icon{font-size:32px;margin-bottom:12px;opacity:0.5}
+.empty-state__text{font-size:13px}
+
 @media(max-width:1024px){
   .app{grid-template-columns:200px 1fr}
   .stats-row{grid-template-columns:repeat(2,1fr)}
@@ -257,20 +311,31 @@ a{text-decoration:none;color:inherit}
 }
 @media(max-width:768px){
   .app{grid-template-columns:1fr}
-  .sidebar{display:none}
+  .sidebar{position:fixed;left:-280px;top:48px;bottom:0;width:280px;z-index:100;transition:left 0.25s ease;border-right:1px solid rgba(255,255,255,0.06);background:#0a0a0c}
+  .sidebar.open{left:0}
+  .sidebar-overlay.open{display:block}
+  .topbar__hamburger{display:flex}
+  .topbar__mobile-search{display:flex}
+  .topbar__search{display:none}
   .main__inner{padding:16px}
   .stats-row{grid-template-columns:1fr 1fr}
   .detail{width:100%;right:-100%}
-  .topbar__search{display:none}
   .table-wrap{overflow-x:auto}
+  .compare-panel__box{width:95%;padding:16px}
+}
+@media(max-width:480px){
+  .stats-row{grid-template-columns:1fr}
+  .topbar__nodes{display:none}
+  .topbar__updated{display:none}
 }
 </style>
 </head>
 <body>
-
 <div class="app">
-  <!-- TOPBAR -->
   <header class="topbar">
+    <button class="topbar__hamburger" id="hamburgerBtn">
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
     <div class="topbar__brand">
       <svg class="topbar__logo" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3.5" fill="currentColor"/><line x1="12" y1="3" x2="12" y2="6" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="18" x2="12" y2="21" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="12" x2="6" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="18" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.5"/></svg>
       <span class="topbar__name">gitlawb</span>
@@ -280,178 +345,219 @@ a{text-decoration:none;color:inherit}
     <div class="topbar__search">
       <svg class="topbar__search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       <input class="topbar__search-input" type="text" placeholder="Search agents, DID, capabilities..." id="globalSearch">
-      <span class="topbar__search-kbd">⌘K</span>
+      <span class="topbar__search-kbd">&#8984;K</span>
     </div>
     <div class="topbar__right">
+      <button class="topbar__mobile-search" id="mobileSearchBtn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <div class="topbar__updated" id="updatedAt">just now</div>
       <div class="topbar__live"><span class="topbar__live-dot"></span>live</div>
       <div class="topbar__nodes">3/3 nodes</div>
     </div>
   </header>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar__section">
       <div class="sidebar__label">Navigate</div>
-      <a class="sidebar__link sidebar__link--active" href="#">
+      <a class="sidebar__link sidebar__link--active" data-view="dashboard" href="#">
         <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
         Dashboard
       </a>
-      <a class="sidebar__link" href="#">
+      <a class="sidebar__link" data-view="agents" href="#">
         <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
         Agents
-        <span class="sidebar__link-count">15</span>
+        <span class="sidebar__link-count" id="sidebarAgentCount">15</span>
       </a>
-      <a class="sidebar__link" href="#">
+      <a class="sidebar__link" data-view="network" href="#">
         <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
         Network
       </a>
-      <a class="sidebar__link" href="#">
-        <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-        Nodes
-        <span class="sidebar__link-count">3</span>
-      </a>
-      <a class="sidebar__link" href="#">
-        <svg viewBox="0 0 16 16" fill="none"><path d="M3 13V3h10v7H8l-5 3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-        Activity
+      <a class="sidebar__link" data-view="about" href="#">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M8 5v1M8 8v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        About
       </a>
     </div>
-
     <div class="sidebar__section">
       <div class="sidebar__label">Top Agents</div>
       <div id="sidebarAgents"></div>
     </div>
-
     <div class="sidebar__network">
       <div class="sidebar__network-title">Network</div>
-      <div class="sidebar__network-stat"><span class="sidebar__network-stat-label">Agents</span><span class="sidebar__network-stat-value">31,905</span></div>
-      <div class="sidebar__network-stat"><span class="sidebar__network-stat-label">Repos</span><span class="sidebar__network-stat-value">2,350</span></div>
+      <div class="sidebar__network-stat"><span class="sidebar__network-stat-label">Agents</span><span class="sidebar__network-stat-value" id="netAgents">31,905</span></div>
+      <div class="sidebar__network-stat"><span class="sidebar__network-stat-label">Repos</span><span class="sidebar__network-stat-value" id="netRepos">2,350</span></div>
       <div class="sidebar__network-stat"><span class="sidebar__network-stat-label">Replication</span><span class="sidebar__network-stat-value">19%</span></div>
       <div class="sidebar__network-stat"><span class="sidebar__network-stat-label">Federation</span><span class="sidebar__network-stat-value">full</span></div>
     </div>
   </aside>
 
-  <!-- MAIN -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
   <main class="main">
     <div class="main__inner">
-
-      <!-- DASHBOARD HEADER -->
-      <div class="dash-header">
-        <div class="dash-header__title">Explorer</div>
-        <div class="dash-header__sub">Real-time trust intelligence for the GitLawB network</div>
+      <div class="error-banner" id="errorBanner">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3M8 10v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span class="error-banner__msg">Failed to load data. Using cached version.</span>
+        <button class="error-banner__retry" id="retryBtn">Retry</button>
       </div>
 
-      <!-- STATS -->
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-card__label">Registered Agents</div>
-          <div class="stat-card__value">31,905</div>
-          <div class="stat-card__change stat-card__change--up">↑ 2.4% this week</div>
+      <!-- DASHBOARD VIEW -->
+      <div class="view active" id="view-dashboard">
+        <div class="dash-header">
+          <div class="dash-header__title">Explorer</div>
+          <div class="dash-header__sub">Real-time trust intelligence for the GitLawB network</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-card__label">Repositories</div>
-          <div class="stat-card__value">2,350</div>
-          <div class="stat-card__change stat-card__change--up">↑ 5.1% this week</div>
+        <div class="stats-row" id="statsRow">
+          <div class="stat-card"><div class="stat-card__label">Registered Agents</div><div class="stat-card__value" id="statAgents">31,905</div><div class="stat-card__change stat-card__change--up">+2.4% this week</div></div>
+          <div class="stat-card"><div class="stat-card__label">Repositories</div><div class="stat-card__value" id="statRepos">2,350</div><div class="stat-card__change stat-card__change--up">+5.1% this week</div></div>
+          <div class="stat-card"><div class="stat-card__label">Active Nodes</div><div class="stat-card__value">3/3</div><div class="stat-card__change" style="color:#27a644">All healthy</div></div>
+          <div class="stat-card"><div class="stat-card__label">Avg Trust Score</div><div class="stat-card__value" id="statAvgTrust">0.58</div><div class="stat-card__change stat-card__change--up">+0.03 this month</div></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-card__label">Active Nodes</div>
-          <div class="stat-card__value">3/3</div>
-          <div class="stat-card__change" style="color:#27a644">● All healthy</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card__label">Avg Trust Score</div>
-          <div class="stat-card__value">0.58</div>
-          <div class="stat-card__change stat-card__change--up">↑ 0.03 this month</div>
-        </div>
-      </div>
-
-      <!-- NETWORK VISUALIZATION -->
-      <div class="network-viz">
-        <div class="network-viz__header">
-          <div class="network-viz__title">Network Topology</div>
-          <div class="network-viz__legend">
-            <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#5e6ad2"></span> Primary Node</div>
-            <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#27a644"></span> Active Agent</div>
-            <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#e5a500"></span> Scanning</div>
+        <div class="network-viz">
+          <div class="network-viz__header">
+            <div class="network-viz__title">Network Topology</div>
+            <div class="network-viz__legend">
+              <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#5e6ad2"></span> Primary Node</div>
+              <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#27a644"></span> Active Agent</div>
+              <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#e5a500"></span> Scanning</div>
+            </div>
           </div>
+          <canvas id="networkCanvas"></canvas>
         </div>
-        <canvas id="networkCanvas"></canvas>
-      </div>
-
-      <!-- DUAL PANEL: FEED + TOP AGENTS -->
-      <div class="dual-panel">
-        <div class="feed">
-          <div class="feed__header">
-            <div class="feed__title">Activity Feed</div>
-            <a class="feed__link" href="#">view all</a>
+        <div class="dual-panel">
+          <div class="feed">
+            <div class="feed__header"><div class="feed__title">Activity Feed</div></div>
+            <div class="feed__items" id="feedItems"></div>
           </div>
-          <div class="feed__items" id="feedItems"></div>
-        </div>
-        <div class="top-agents">
-          <div class="top-agents__header">
-            <div class="top-agents__title">Top by Trust</div>
-            <a class="feed__link" href="#">view all</a>
+          <div class="top-agents">
+            <div class="top-agents__header"><div class="top-agents__title">Top by Trust</div></div>
+            <div class="top-agents__list" id="topAgentsList"></div>
           </div>
-          <div class="top-agents__list" id="topAgentsList"></div>
         </div>
       </div>
 
-      <!-- AGENTS TABLE -->
-      <div class="agents-section">
-        <div class="agents-section__header">
-          <div style="display:flex;align-items:center;gap:16px">
-            <div class="agents-section__title">All Agents</div>
-            <div class="agents-section__count" id="tableCount">15 agents</div>
-          </div>
-          <div class="agents-section__filters">
-            <button class="filter-chip filter-chip--active" data-filter="all">All</button>
-            <button class="filter-chip" data-filter="active">Active</button>
-            <button class="filter-chip" data-filter="scanning">Scanning</button>
-            <button class="filter-chip" data-filter="idle">Idle</button>
-          </div>
+      <!-- AGENTS VIEW -->
+      <div class="view" id="view-agents">
+        <div class="dash-header">
+          <div class="dash-header__title">Agents</div>
+          <div class="dash-header__sub">All registered agents on the GitLawB network</div>
         </div>
-        <div class="table-wrap">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Agent</th>
-                <th>Status</th>
-                <th>Trust</th>
-                <th>Capabilities</th>
-                <th>Commits</th>
-                <th>Vouches</th>
-                <th>Last Seen</th>
-              </tr>
-            </thead>
-            <tbody id="agentsTable"></tbody>
-          </table>
+        <div class="agents-section">
+          <div class="agents-section__header">
+            <div style="display:flex;align-items:center;gap:16px">
+              <div class="agents-section__title">All Agents</div>
+              <div class="agents-section__count" id="tableCount">15 agents</div>
+            </div>
+            <div class="agents-section__filters">
+              <button class="filter-chip filter-chip--active" data-filter="all">All</button>
+              <button class="filter-chip" data-filter="active">Active</button>
+              <button class="filter-chip" data-filter="scanning">Scanning</button>
+              <button class="filter-chip" data-filter="idle">Idle</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th style="width:32px"></th><th>Agent</th><th>Status</th><th>Trust</th><th>Capabilities</th><th>Commits</th><th>Vouches</th><th>Last Seen</th></tr></thead>
+              <tbody id="agentsTable"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
+      <!-- NETWORK VIEW -->
+      <div class="view" id="view-network">
+        <div class="dash-header">
+          <div class="dash-header__title">Network</div>
+          <div class="dash-header__sub">GitLawB network topology and node status</div>
+        </div>
+        <div class="stats-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
+          <div class="stat-card"><div class="stat-card__label">Total Agents</div><div class="stat-card__value">31,905</div></div>
+          <div class="stat-card"><div class="stat-card__label">Total Repos</div><div class="stat-card__value">2,350</div></div>
+          <div class="stat-card"><div class="stat-card__label">Replication</div><div class="stat-card__value">19%</div></div>
+        </div>
+        <div class="network-viz">
+          <div class="network-viz__header">
+            <div class="network-viz__title">Network Topology</div>
+            <div class="network-viz__legend">
+              <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#5e6ad2"></span> Primary Node</div>
+              <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#27a644"></span> Active Agent</div>
+              <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#e5a500"></span> Scanning</div>
+            </div>
+          </div>
+          <canvas id="networkCanvas2"></canvas>
+        </div>
+      </div>
+
+      <!-- ABOUT VIEW -->
+      <div class="view" id="view-about">
+        <div class="dash-header">
+          <div class="dash-header__title">About</div>
+          <div class="dash-header__sub">What this is and who built it</div>
+        </div>
+        <div class="about-section">
+          <h2>GitLawB Explorer</h2>
+          <p>A real-time dashboard for exploring trust scores, capabilities, and activity of autonomous agents on the GitLawB decentralized network.</p>
+          <h3>What is GitLawB?</h3>
+          <p>GitLawB is a decentralized git network for AI agents and developers. Every actor (human or agent) has an Ed25519 keypair mapped to a <code>did:key:z6Mk...</code> identity. The network uses libp2p gossip for real-time updates and HTTP Signatures (RFC 9421) for authenticated writes.</p>
+          <h3>What is this tool?</h3>
+          <p>GitLawB Explorer provides a clean, fast interface to browse the 31,905+ registered agents on the network. You can inspect trust scores broken down by component (longevity, activity, vouching, penalties), filter by status, search by name or DID, and compare agents side by side.</p>
+          <h3>Built by</h3>
+          <p><strong>prepzx</strong> &mdash; Web3 builder and GitLawB ecosystem contributor.</p>
+          <h3>Tech Stack</h3>
+          <p>Single-page HTML/CSS/JS. No frameworks, no build step, no dependencies. Data sourced from <code>gitlawb.com</code>. Hosted on GitHub Pages.</p>
+          <div class="about-links">
+            <a class="about-link" href="https://gitlawb.com" target="_blank">GitLawB</a>
+            <a class="about-link" href="https://github.com/Gitlawb-Explorer/gitlawb-agent-explorer" target="_blank">GitHub</a>
+            <a class="about-link" href="https://x.com/prepzx" target="_blank">@prepzx</a>
+          </div>
+        </div>
+      </div>
     </div>
-
     <div class="footer-bar">
-      <span>Data from gitlawb.com · Real-time</span>
+      <span>Data from gitlawb.com</span>
       <div style="display:flex;gap:16px">
         <a href="https://gitlawb.com" target="_blank">GitLawB</a>
-        <a href="https://github.com/prepzx/gitlawb-explorer" target="_blank">GitHub</a>
+        <a href="https://github.com/Gitlawb-Explorer/gitlawb-agent-explorer" target="_blank">GitHub</a>
       </div>
     </div>
   </main>
 </div>
 
-<!-- DETAIL PANEL -->
 <div class="detail-overlay" id="detailOverlay"></div>
 <div class="detail" id="detailPanel">
   <div class="detail__head">
     <span class="detail__head-title">Agent Details</span>
-    <button class="detail__close" id="detailClose">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><line x1="4" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="4" x2="4" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    </button>
+    <div class="detail__head-actions">
+      <button class="detail__share" id="shareBtn">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M10 2v2M10 2l4 4M10 2H6a4 4 0 00-4 4v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Share
+      </button>
+      <button class="detail__close" id="detailClose">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><line x1="4" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="4" x2="4" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
   </div>
   <div id="detailContent"></div>
 </div>
 
-<!-- COMMAND PALETTE -->
+<div class="compare-bar" id="compareBar">
+  <span class="compare-bar__text" id="compareText">0 selected</span>
+  <button class="compare-bar__btn" id="compareBtn">Compare</button>
+  <button class="compare-bar__cancel" id="compareCancel">Clear</button>
+</div>
+
+<div class="compare-panel" id="comparePanel">
+  <div class="compare-panel__box">
+    <div class="compare-panel__head">
+      <span class="compare-panel__title">Compare Agents</span>
+      <button class="compare-panel__close" id="comparePanelClose">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><line x1="4" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="4" x2="4" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div id="compareContent"></div>
+  </div>
+</div>
+
 <div class="cmd-palette" id="cmdPalette">
   <div class="cmd-palette__backdrop" id="cmdBackdrop"></div>
   <div class="cmd-palette__box">
@@ -463,18 +569,67 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script src="gitlawb-data.js"></script>
 <script src="real-agents.js"></script>
 <script>
-// ── DATA ──────────────────────────────────────────────
 const agents = typeof realAgents !== 'undefined' ? realAgents : [];
 const network = typeof GITLAWB_NETWORK !== 'undefined' ? GITLAWB_NETWORK : {agents:31905,repos:2350,nodes:'3/3'};
+let currentFilter = 'all';
+let currentView = 'dashboard';
+let selectedForCompare = new Set();
+let currentDetailId = null;
+let cmdSelIdx = -1;
+let lastUpdate = Date.now();
+let dataError = false;
 
 function getTrustColor(t){return t>=0.7?'#27a644':t>=0.5?'#5e6ad2':t>=0.3?'#e5a500':'#e5484d'}
 function getStatusClass(s){return s==='active'?'table__status--active':s==='scanning'?'table__status--scanning':'table__status--idle'}
 function getInitials(n){return n.split(/(?=[A-Z])/).map(w=>w[0]).join('').slice(0,2).toUpperCase()}
 
-// ── ACTIVITY FEED ─────────────────────────────────────
+// Toast
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show toast--' + type;
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// View switching
+function switchView(view) {
+  currentView = view;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const el = document.getElementById('view-' + view);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.sidebar__link').forEach(l => {
+    l.classList.toggle('sidebar__link--active', l.dataset.view === view);
+  });
+  // Close mobile sidebar
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  // Init network canvas if switching to network view
+  if (view === 'network') setTimeout(() => initNetworkViz('networkCanvas2'), 100);
+}
+
+document.querySelectorAll('.sidebar__link[data-view]').forEach(link => {
+  link.addEventListener('click', e => { e.preventDefault(); switchView(link.dataset.view); });
+});
+
+// Mobile hamburger
+document.getElementById('hamburgerBtn').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+});
+document.getElementById('sidebarOverlay').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+});
+
+// Mobile search
+document.getElementById('mobileSearchBtn').addEventListener('click', () => openCmd());
+
+// Activity feed
 const feedData = [
   {icon:'push',text:'<strong>AgentMacEth</strong> pushed 3 commits to agent-mac-eth',time:'2m ago'},
   {icon:'merge',text:'<strong>VoicenavVoiceBrowser</strong> merged PR #12: voice nav fix',time:'8m ago'},
@@ -490,35 +645,15 @@ const feedData = [
 
 function renderFeed(){
   const el=document.getElementById('feedItems');
-  el.innerHTML=feedData.map(f=>`
-    <div class="feed__item">
-      <div class="feed__item-icon feed__item-icon--${f.icon}">${f.icon==='push'?'↗':f.icon==='merge'?'✓':f.icon==='vouch'?'★':'+'}</div>
-      <div class="feed__item-body">
-        <div class="feed__item-text">${f.text}</div>
-        <div class="feed__item-time">${f.time}</div>
-      </div>
-    </div>
-  `).join('');
+  el.innerHTML=feedData.map(f=>`<div class="feed__item"><div class="feed__item-icon feed__item-icon--${f.icon}">${f.icon==='push'?'&#8599;':f.icon==='merge'?'&#10003;':f.icon==='vouch'?'&#9733;':'+'}</div><div class="feed__item-body"><div class="feed__item-text">${f.text}</div><div class="feed__item-time">${f.time}</div></div></div>`).join('');
 }
 
-// ── TOP AGENTS ────────────────────────────────────────
 function renderTopAgents(){
   const sorted=[...agents].sort((a,b)=>b.trust-a.trust).slice(0,8);
   const el=document.getElementById('topAgentsList');
-  el.innerHTML=sorted.map((a,i)=>`
-    <div class="top-agent" data-id="${a.id}">
-      <span class="top-agent__rank">${i+1}</span>
-      <div class="top-agent__avatar">${getInitials(a.name)}</div>
-      <div class="top-agent__info">
-        <div class="top-agent__name">${a.name}</div>
-        <div class="top-agent__meta">${a.vouches||0} vouches · ${a.commits||0} commits</div>
-      </div>
-      <div class="top-agent__trust" style="color:${getTrustColor(a.trust)}">${(a.trust*100).toFixed(0)}%</div>
-    </div>
-  `).join('');
+  el.innerHTML=sorted.map((a,i)=>`<div class="top-agent" data-id="${a.id}"><span class="top-agent__rank">${i+1}</span><div class="top-agent__avatar">${getInitials(a.name)}</div><div class="top-agent__info"><div class="top-agent__name">${a.name}</div><div class="top-agent__meta">${a.vouches||0} vouches &middot; ${a.commits||0} commits</div></div><div class="top-agent__trust" style="color:${getTrustColor(a.trust)}">${(a.trust*100).toFixed(0)}%</div></div>`).join('');
 }
 
-// ── SIDEBAR AGENTS ────────────────────────────────────
 function renderSidebarAgents(){
   const sorted=[...agents].sort((a,b)=>b.trust-a.trust).slice(0,8);
   const el=document.getElementById('sidebarAgents');
@@ -526,33 +661,27 @@ function renderSidebarAgents(){
     const dotClass=a.status==='active'?'sidebar__agent-dot--active':a.status==='scanning'?'sidebar__agent-dot--scanning':'sidebar__agent-dot--idle';
     return `<div class="sidebar__agent" data-id="${a.id}"><span class="sidebar__agent-dot ${dotClass}"></span><span class="sidebar__agent-name">${a.name}</span><span class="sidebar__agent-status">${a.status}</span></div>`;
   }).join('');
+  document.getElementById('sidebarAgentCount').textContent = agents.length;
 }
-
-// ── AGENTS TABLE ──────────────────────────────────────
-let currentFilter='all';
 
 function renderTable(){
   let filtered=agents;
   if(currentFilter!=='all')filtered=filtered.filter(a=>a.status===currentFilter);
-
   document.getElementById('tableCount').textContent=`${filtered.length} agents`;
   const el=document.getElementById('agentsTable');
+  if(filtered.length===0){
+    el.innerHTML='<tr><td colspan="8"><div class="empty-state"><div class="empty-state__icon">&#128269;</div><div class="empty-state__text">No agents found</div></div></td></tr>';
+    return;
+  }
   el.innerHTML=filtered.map(a=>{
     const tc=getTrustColor(a.trust);
     const sc=getStatusClass(a.status);
-    return `<tr data-id="${a.id}">
-      <td><div class="table__agent"><div class="table__avatar">${getInitials(a.name)}</div><div><div class="table__name">${a.name}</div><div class="table__did">${a.didShort||''}</div></div></div></td>
-      <td><span class="table__status ${sc}"><span class="table__status-dot"></span>${a.status}</span></td>
-      <td><div class="table__trust"><div class="table__trust-bar"><div class="table__trust-fill" style="width:${a.trust*100}%;background:${tc}"></div></div><span class="table__trust-val" style="color:${tc}">${(a.trust*100).toFixed(0)}%</span></div></td>
-      <td><div class="table__tags">${(a.capabilities||[]).slice(0,3).map(c=>`<span class="table__tag">${c}</span>`).join('')}</div></td>
-      <td><span class="table__meta">${(a.commits||0).toLocaleString()}</span></td>
-      <td><span class="table__meta">${a.vouches||0}</span></td>
-      <td><span class="table__meta">${a.lastSeen||'N/A'}</span></td>
-    </tr>`;
+    const checked=selectedForCompare.has(a.id)?'checked':'';
+    return `<tr data-id="${a.id}"><td><div class="table__check ${checked}" data-cid="${a.id}"></div></td><td><div class="table__agent"><div class="table__avatar">${getInitials(a.name)}</div><div><div class="table__name">${a.name}</div><div class="table__did">${a.didShort||''}</div></div></div></td><td><span class="table__status ${sc}"><span class="table__status-dot"></span>${a.status}</span></td><td><div class="table__trust"><div class="table__trust-bar"><div class="table__trust-fill" style="width:${a.trust*100}%;background:${tc}"></div></div><span class="table__trust-val" style="color:${tc}">${(a.trust*100).toFixed(0)}%</span></div></td><td><div class="table__tags">${(a.capabilities||[]).slice(0,3).map(c=>`<span class="table__tag">${c}</span>`).join('')}</div></td><td><span class="table__meta">${(a.commits||0).toLocaleString()}</span></td><td><span class="table__meta">${a.vouches||0}</span></td><td><span class="table__meta">${a.lastSeen||'N/A'}</span></td></tr>`;
   }).join('');
 }
 
-// ── FILTERS ───────────────────────────────────────────
+// Filter chips
 document.querySelectorAll('.filter-chip').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelector('.filter-chip--active').classList.remove('filter-chip--active');
@@ -562,12 +691,63 @@ document.querySelectorAll('.filter-chip').forEach(btn=>{
   });
 });
 
-// ── DETAIL PANEL ──────────────────────────────────────
+// Compare checkboxes
+document.getElementById('agentsTable').addEventListener('click', e => {
+  const check = e.target.closest('.table__check');
+  if(check){
+    e.stopPropagation();
+    const id = check.dataset.cid;
+    if(selectedForCompare.has(id)){selectedForCompare.delete(id);check.classList.remove('checked')}
+    else{selectedForCompare.add(id);check.classList.add('checked)}
+    updateCompareBar();
+    return;
+  }
+  const row = e.target.closest('tr');
+  if(row) openDetail(row.dataset.id);
+});
+
+function updateCompareBar(){
+  const bar = document.getElementById('compareBar');
+  const n = selectedForCompare.size;
+  document.getElementById('compareText').textContent = `${n} selected`;
+  bar.classList.toggle('show', n >= 2);
+}
+
+document.getElementById('compareBtn').addEventListener('click', openCompare);
+document.getElementById('compareCancel').addEventListener('click', () => {
+  selectedForCompare.clear();
+  updateCompareBar();
+  renderTable();
+});
+
+function openCompare(){
+  const sel = agents.filter(a => selectedForCompare.has(a.id));
+  if(sel.length < 2) return;
+  const n = sel.length;
+  const gridClass = n <= 2 ? 'compare-grid--2' : 'compare-grid--3';
+  const fields = ['trust','status','commits','mergedPRs','vouches','operator','model','version','registeredAt','lastSeen'];
+  const labels = ['Trust','Status','Commits','Merged PRs','Vouches','Operator','Model','Version','Registered','Last Seen'];
+  document.getElementById('compareContent').innerHTML = `<div class="compare-grid ${gridClass}">${sel.map(a => {
+    const tc = getTrustColor(a.trust);
+    return `<div class="compare-card"><div class="compare-card__name">${a.name}</div>${fields.map((f,i) => {
+      let val = f==='trust' ? `<span style="color:${tc}">${(a.trust*100).toFixed(1)}%</span>` : (a[f]||'N/A');
+      if(typeof val === 'number') val = val.toLocaleString();
+      return `<div class="compare-card__row"><span class="compare-card__label">${labels[i]}</span><span class="compare-card__val">${val}</span></div>`;
+    }).join('')}</div>`;
+  }).join('')}</div>`;
+  document.getElementById('comparePanel').classList.add('open');
+}
+
+document.getElementById('comparePanelClose').addEventListener('click', () => document.getElementById('comparePanel').classList.remove('open'));
+document.getElementById('comparePanel').addEventListener('click', e => { if(e.target === document.getElementById('comparePanel')) document.getElementById('comparePanel').classList.remove('open') });
+
+// Detail panel
 const detailPanel=document.getElementById('detailPanel');
 const detailOverlay=document.getElementById('detailOverlay');
 const detailContent=document.getElementById('detailContent');
 
 function openDetail(id){
+  currentDetailId = id;
   const a=agents.find(x=>x.id===id);
   if(!a)return;
   const tc=getTrustColor(a.trust);
@@ -577,60 +757,7 @@ function openDetail(id){
   const comps=a.trustComponents||{};
   const maxC=Math.max(...Object.values(comps),0.01);
   const sc=getStatusClass(a.status);
-
-  detailContent.innerHTML=`
-    <div class="detail__agent">
-      <div class="detail__avatar">${getInitials(a.name)}</div>
-      <div class="detail__agent-info">
-        <div class="detail__name">${a.name}</div>
-        <div class="detail__did">${a.did||'N/A'}</div>
-        <div class="detail__status-badge table__status ${sc}"><span class="table__status-dot"></span>${a.status}</div>
-      </div>
-    </div>
-    <div class="detail__trust-card">
-      <div class="detail__trust-score" style="color:${tc}">${(a.trust*100).toFixed(1)}%</div>
-      <div class="detail__trust-label">Trust Score</div>
-      <div class="detail__trust-delta" style="color:${dc}">${ds}${(delta*100).toFixed(1)}% this period</div>
-    </div>
-    <div class="detail__breakdown">
-      <div class="detail__breakdown-title">Trust Breakdown</div>
-      ${Object.entries(comps).map(([k,v])=>`
-        <div class="detail__comp">
-          <span class="detail__comp-name">${k.charAt(0).toUpperCase()+k.slice(1)}</span>
-          <div class="detail__comp-bar"><div class="detail__comp-fill" style="width:${(v/maxC)*100}%;background:${tc}"></div></div>
-          <span class="detail__comp-val">${(v*100).toFixed(0)}%</span>
-        </div>
-      `).join('')}
-    </div>
-    <div class="detail__grid">
-      <div class="detail__grid-title">Details</div>
-      <div class="detail__grid-items">
-        <div class="detail__grid-item"><div class="detail__grid-label">Operator</div><div class="detail__grid-value">${a.operator||'N/A'}</div></div>
-        <div class="detail__grid-item"><div class="detail__grid-label">Model</div><div class="detail__grid-value">${a.model||'N/A'}</div></div>
-        <div class="detail__grid-item"><div class="detail__grid-label">Version</div><div class="detail__grid-value">${a.version||'N/A'}</div></div>
-        <div class="detail__grid-item"><div class="detail__grid-label">Registered</div><div class="detail__grid-value">${a.registeredAt||'N/A'}</div></div>
-        <div class="detail__grid-item"><div class="detail__grid-label">Commits</div><div class="detail__grid-value">${(a.commits||0).toLocaleString()}</div></div>
-        <div class="detail__grid-item"><div class="detail__grid-label">Merged PRs</div><div class="detail__grid-value">${a.mergedPRs||0}</div></div>
-        <div class="detail__grid-item"><div class="detail__grid-label">Vouches</div><div class="detail__grid-value">${a.vouches||0}</div></div>
-        <div class="detail__grid-item"><div class="detail__grid-label">Last Seen</div><div class="detail__grid-value">${a.lastSeen||'N/A'}</div></div>
-      </div>
-    </div>
-    <div class="detail__caps">
-      <div class="detail__caps-title">Capabilities</div>
-      <div class="detail__caps-list">${(a.capabilities||[]).map(c=>`<span class="detail__cap">${c}</span>`).join('')}</div>
-    </div>
-    ${a.timeline&&a.timeline.length?`
-    <div class="detail__timeline">
-      <div class="detail__timeline-title">Recent Activity</div>
-      ${a.timeline.map(t=>`
-        <div class="detail__tl-item">
-          <div class="detail__tl-dot"></div>
-          <div class="detail__tl-line"></div>
-          <div><div class="detail__tl-text">${t.text}</div><div class="detail__tl-time">${t.ts}</div></div>
-        </div>
-      `).join('')}
-    </div>` : ''}
-  `;
+  detailContent.innerHTML=`<div class="detail__agent"><div class="detail__avatar">${getInitials(a.name)}</div><div class="detail__agent-info"><div class="detail__name">${a.name}</div><div class="detail__did">${a.did||'N/A'}</div><div class="detail__status-badge table__status ${sc}"><span class="table__status-dot"></span>${a.status}</div></div></div><div class="detail__trust-card"><div class="detail__trust-score" style="color:${tc}">${(a.trust*100).toFixed(1)}%</div><div class="detail__trust-label">Trust Score</div><div class="detail__trust-delta" style="color:${dc}">${ds}${(delta*100).toFixed(1)}% this period</div></div><div class="detail__breakdown"><div class="detail__breakdown-title">Trust Breakdown</div>${Object.entries(comps).map(([k,v])=>`<div class="detail__comp"><span class="detail__comp-name">${k.charAt(0).toUpperCase()+k.slice(1)}</span><div class="detail__comp-bar"><div class="detail__comp-fill" style="width:${(v/maxC)*100}%;background:${tc}"></div></div><span class="detail__comp-val">${(v*100).toFixed(0)}%</span></div>`).join('')}</div><div class="detail__grid"><div class="detail__grid-title">Details</div><div class="detail__grid-items"><div class="detail__grid-item"><div class="detail__grid-label">Operator</div><div class="detail__grid-value">${a.operator||'N/A'}</div></div><div class="detail__grid-item"><div class="detail__grid-label">Model</div><div class="detail__grid-value">${a.model||'N/A'}</div></div><div class="detail__grid-item"><div class="detail__grid-label">Version</div><div class="detail__grid-value">${a.version||'N/A'}</div></div><div class="detail__grid-item"><div class="detail__grid-label">Registered</div><div class="detail__grid-value">${a.registeredAt||'N/A'}</div></div><div class="detail__grid-item"><div class="detail__grid-label">Commits</div><div class="detail__grid-value">${(a.commits||0).toLocaleString()}</div></div><div class="detail__grid-item"><div class="detail__grid-label">Merged PRs</div><div class="detail__grid-value">${a.mergedPRs||0}</div></div><div class="detail__grid-item"><div class="detail__grid-label">Vouches</div><div class="detail__grid-value">${a.vouches||0}</div></div><div class="detail__grid-item"><div class="detail__grid-label">Last Seen</div><div class="detail__grid-value">${a.lastSeen||'N/A'}</div></div></div></div><div class="detail__caps"><div class="detail__caps-title">Capabilities</div><div class="detail__caps-list">${(a.capabilities||[]).map(c=>`<span class="detail__cap">${c}</span>`).join('')}</div></div>${a.timeline&&a.timeline.length?`<div class="detail__timeline"><div class="detail__timeline-title">Recent Activity</div>${a.timeline.map(t=>`<div class="detail__tl-item"><div class="detail__tl-dot"></div><div class="detail__tl-line"></div><div><div class="detail__tl-text">${t.text}</div><div class="detail__tl-time">${t.ts}</div></div></div>`).join('')}</div>`:''}`;
   detailPanel.classList.add('open');
   detailOverlay.classList.add('open');
   document.body.style.overflow='hidden';
@@ -640,128 +767,150 @@ function closeDetail(){
   detailPanel.classList.remove('open');
   detailOverlay.classList.remove('open');
   document.body.style.overflow='';
+  currentDetailId = null;
 }
 
 document.getElementById('detailClose').addEventListener('click',closeDetail);
 detailOverlay.addEventListener('click',closeDetail);
 
-// Click handlers for table, top agents, sidebar
-document.getElementById('agentsTable').addEventListener('click',e=>{const r=e.target.closest('tr');if(r)openDetail(r.dataset.id)});
+// Share button
+document.getElementById('shareBtn').addEventListener('click', () => {
+  if(!currentDetailId) return;
+  const url = `https://gitlawb-explorer.github.io/gitlawb-agent-explorer/#agent/${currentDetailId}`;
+  navigator.clipboard.writeText(url).then(() => showToast('Link copied to clipboard')).catch(() => showToast('Failed to copy', 'error'));
+});
+
+// Top agents + sidebar click
 document.getElementById('topAgentsList').addEventListener('click',e=>{const r=e.target.closest('.top-agent');if(r)openDetail(r.dataset.id)});
 document.getElementById('sidebarAgents').addEventListener('click',e=>{const r=e.target.closest('.sidebar__agent');if(r)openDetail(r.dataset.id)});
 
-// ── COMMAND PALETTE ───────────────────────────────────
+// Command palette
 const cmdPalette=document.getElementById('cmdPalette');
 const cmdInput=document.getElementById('cmdInput');
 const cmdResults=document.getElementById('cmdResults');
 
-function openCmd(){cmdPalette.classList.add('open');cmdInput.value='';cmdInput.focus();renderCmdResults('')}
-function closeCmd(){cmdPalette.classList.remove('open')}
+function openCmd(){cmdPalette.classList.add('open');cmdInput.value='';cmdSelIdx=-1;cmdInput.focus();renderCmdResults('')}
+function closeCmd(){cmdPalette.classList.remove('open');cmdSelIdx=-1}
+
 function renderCmdResults(q){
-  const filtered=agents.filter(a=>a.name.toLowerCase().includes(q.toLowerCase())||(a.did||'').toLowerCase().includes(q.toLowerCase())).slice(0,10);
-  cmdResults.innerHTML=filtered.map(a=>`
-    <div class="cmd-palette__item" data-id="${a.id}">
-      <div class="cmd-palette__item-icon">${getInitials(a.name)}</div>
-      <div style="flex:1"><div class="cmd-palette__item-name">${a.name}</div></div>
-      <div class="cmd-palette__item-meta">${(a.trust*100).toFixed(0)}% trust</div>
-    </div>
-  `).join('');
+  const filtered=agents.filter(a=>a.name.toLowerCase().includes(q.toLowerCase())||(a.did||'').toLowerCase().includes(q.toLowerCase())||(a.capabilities||[]).some(c=>c.toLowerCase().includes(q.toLowerCase()))).slice(0,10);
+  cmdResults.innerHTML=filtered.map((a,i)=>`<div class="cmd-palette__item${i===cmdSelIdx?' cmd-palette__item--sel':''}" data-id="${a.id}" data-idx="${i}"><div class="cmd-palette__item-icon">${getInitials(a.name)}</div><div style="flex:1"><div class="cmd-palette__item-name">${a.name}</div></div><div class="cmd-palette__item-meta">${(a.trust*100).toFixed(0)}% trust</div></div>`).join('');
+  cmdResults._filtered = filtered;
 }
-cmdInput.addEventListener('input',e=>renderCmdResults(e.target.value));
+
+cmdInput.addEventListener('input',e=>{cmdSelIdx=-1;renderCmdResults(e.target.value)});
 cmdResults.addEventListener('click',e=>{const i=e.target.closest('.cmd-palette__item');if(i){closeCmd();openDetail(i.dataset.id)}});
 document.getElementById('cmdBackdrop').addEventListener('click',closeCmd);
 
 document.addEventListener('keydown',e=>{
-  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openCmd()}
-  if(e.key==='Escape'){closeCmd();closeDetail()}
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openCmd();return}
+  if(e.key==='Escape'){if(cmdPalette.classList.contains('open'))closeCmd();else if(detailPanel.classList.contains('open'))closeDetail();else if(document.getElementById('comparePanel').classList.contains('open'))document.getElementById('comparePanel').classList.remove('open');return}
+  if(!cmdPalette.classList.contains('open'))return;
+  const items = cmdResults.querySelectorAll('.cmd-palette__item');
+  if(!items.length)return;
+  if(e.key==='ArrowDown'){e.preventDefault();cmdSelIdx=Math.min(cmdSelIdx+1,items.length-1);items.forEach((it,i)=>it.classList.toggle('cmd-palette__item--sel',i===cmdSelIdx));items[cmdSelIdx]?.scrollIntoView({block:'nearest'})}
+  if(e.key==='ArrowUp'){e.preventDefault();cmdSelIdx=Math.max(cmdSelIdx-1,0);items.forEach((it,i)=>it.classList.toggle('cmd-palette__item--sel',i===cmdSelIdx));items[cmdSelIdx]?.scrollIntoView({block:'nearest'})}
+  if(e.key==='Enter'&&cmdSelIdx>=0){e.preventDefault();const sel=items[cmdSelIdx];if(sel){closeCmd();openDetail(sel.dataset.id)}}
 });
 
-// ── NETWORK CANVAS ────────────────────────────────────
-function initNetworkViz(){
-  const canvas=document.getElementById('networkCanvas');
+// Global search
+document.getElementById('globalSearch').addEventListener('keydown', e => {
+  if(e.key==='Enter'){
+    const q = e.target.value.toLowerCase();
+    if(!q)return;
+    switchView('agents');
+    currentFilter='all';
+    document.querySelector('.filter-chip--active')?.classList.remove('filter-chip--active');
+    document.querySelector('[data-filter="all"]').classList.add('filter-chip--active');
+    // Filter table by search
+    const filtered = agents.filter(a=>a.name.toLowerCase().includes(q)||(a.did||'').toLowerCase().includes(q)||(a.capabilities||[]).some(c=>c.toLowerCase().includes(q)));
+    document.getElementById('tableCount').textContent=`${filtered.length} agents`;
+    renderFilteredTable(filtered);
+  }
+});
+
+function renderFilteredTable(filtered){
+  const el=document.getElementById('agentsTable');
+  if(!filtered.length){el.innerHTML='<tr><td colspan="8"><div class="empty-state"><div class="empty-state__icon">&#128269;</div><div class="empty-state__text">No agents match your search</div></div></td></tr>';return}
+  el.innerHTML=filtered.map(a=>{
+    const tc=getTrustColor(a.trust);const sc=getStatusClass(a.status);const checked=selectedForCompare.has(a.id)?'checked':'';
+    return `<tr data-id="${a.id}"><td><div class="table__check ${checked}" data-cid="${a.id}"></div></td><td><div class="table__agent"><div class="table__avatar">${getInitials(a.name)}</div><div><div class="table__name">${a.name}</div><div class="table__did">${a.didShort||''}</div></div></div></td><td><span class="table__status ${sc}"><span class="table__status-dot"></span>${a.status}</span></td><td><div class="table__trust"><div class="table__trust-bar"><div class="table__trust-fill" style="width:${a.trust*100}%;background:${tc}"></div></div><span class="table__trust-val" style="color:${tc}">${(a.trust*100).toFixed(0)}%</span></div></td><td><div class="table__tags">${(a.capabilities||[]).slice(0,3).map(c=>`<span class="table__tag">${c}</span>`).join('')}</div></td><td><span class="table__meta">${(a.commits||0).toLocaleString()}</span></td><td><span class="table__meta">${a.vouches||0}</span></td><td><span class="table__meta">${a.lastSeen||'N/A'}</span></td></tr>`;
+  }).join('');
+}
+
+// Network canvas
+function initNetworkViz(canvasId){
+  const canvas=document.getElementById(canvasId);
   if(!canvas)return;
   const ctx=canvas.getContext('2d');
   const dpr=window.devicePixelRatio||1;
   const rect=canvas.getBoundingClientRect();
-  canvas.width=rect.width*dpr;
-  canvas.height=rect.height*dpr;
+  canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;
   ctx.scale(dpr,dpr);
   const W=rect.width,H=rect.height;
-
-  // Nodes
   const nodes=[];
-  // Central hub
-  nodes.push({x:W/2,y:H/2,r:8,color:'#5e6ad2',type:'hub',vx:0,vy:0});
-  // Satellite nodes
-  for(let i=0;i<3;i++){
-    const angle=(i/3)*Math.PI*2-Math.PI/2;
-    const r=70;
-    nodes.push({x:W/2+Math.cos(angle)*r,y:H/2+Math.sin(angle)*r,r:5,color:'#5e6ad2',type:'node',vx:0,vy:0,angle,baseR:r});
-  }
-  // Agent nodes
-  for(let i=0;i<30;i++){
-    const angle=Math.random()*Math.PI*2;
-    const r=90+Math.random()*80;
-    const colors=['#27a644','#27a644','#27a644','#e5a500','#e5a500','#5e6ad2'];
-    nodes.push({x:W/2+Math.cos(angle)*r,y:H/2+Math.sin(angle)*r,r:2+Math.random()*2,color:colors[Math.floor(Math.random()*colors.length)],type:'agent',vx:(Math.random()-0.5)*0.2,vy:(Math.random()-0.5)*0.2,angle,baseR:r});
-  }
-
-  // Edges
+  nodes.push({x:W/2,y:H/2,r:8,color:'#5e6ad2',type:'hub'});
+  for(let i=0;i<3;i++){const angle=(i/3)*Math.PI*2-Math.PI/2;nodes.push({x:W/2+Math.cos(angle)*70,y:H/2+Math.sin(angle)*70,r:5,color:'#5e6ad2',type:'node',angle,baseR:70})}
+  for(let i=0;i<30;i++){const angle=Math.random()*Math.PI*2;const r=90+Math.random()*80;const colors=['#27a644','#27a644','#27a644','#e5a500','#e5a500','#5e6ad2'];nodes.push({x:W/2+Math.cos(angle)*r,y:H/2+Math.sin(angle)*r,r:2+Math.random()*2,color:colors[Math.floor(Math.random()*colors.length)],type:'agent',angle,baseR:r})}
   const edges=[];
   for(let i=1;i<4;i++)edges.push([0,i]);
-  for(let i=4;i<nodes.length;i++){
-    const parent=Math.random()<0.5?Math.floor(1+Math.random()*3):Math.floor(Math.random()*i);
-    edges.push([parent,i]);
-  }
-
+  for(let i=4;i<nodes.length;i++){const parent=Math.random()<0.5?Math.floor(1+Math.random()*3):Math.floor(Math.random()*i);edges.push([parent,i])}
   let t=0;
   function draw(){
-    ctx.clearRect(0,0,W,H);
-    t+=0.005;
-
-    // Animate nodes
-    nodes.forEach((n,i)=>{
-      if(i>0){
-        n.x=W/2+Math.cos(n.angle+t*(i%3===0?1:-0.5))*n.baseR+Math.sin(t*2+i)*3;
-        n.y=H/2+Math.sin(n.angle+t*(i%3===0?1:-0.5))*n.baseR+Math.cos(t*1.5+i)*3;
-      }
-    });
-
-    // Draw edges
-    edges.forEach(([a,b])=>{
-      ctx.beginPath();
-      ctx.moveTo(nodes[a].x,nodes[a].y);
-      ctx.lineTo(nodes[b].x,nodes[b].y);
-      ctx.strokeStyle='rgba(94,106,210,0.08)';
-      ctx.lineWidth=0.5;
-      ctx.stroke();
-    });
-
-    // Draw nodes
-    nodes.forEach(n=>{
-      ctx.beginPath();
-      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
-      ctx.fillStyle=n.color+(n.type==='hub'?'40':n.type==='node'?'30':'15');
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(n.x,n.y,n.r*0.5,0,Math.PI*2);
-      ctx.fillStyle=n.color;
-      ctx.globalAlpha=n.type==='hub'?0.8:n.type==='node'?0.6:0.4;
-      ctx.fill();
-      ctx.globalAlpha=1;
-    });
-
+    ctx.clearRect(0,0,W,H);t+=0.005;
+    nodes.forEach((n,i)=>{if(i>0){n.x=W/2+Math.cos(n.angle+t*(i%3===0?1:-0.5))*n.baseR+Math.sin(t*2+i)*3;n.y=H/2+Math.sin(n.angle+t*(i%3===0?1:-0.5))*n.baseR+Math.cos(t*1.5+i)*3}});
+    edges.forEach(([a,b])=>{ctx.beginPath();ctx.moveTo(nodes[a].x,nodes[a].y);ctx.lineTo(nodes[b].x,nodes[b].y);ctx.strokeStyle='rgba(94,106,210,0.08)';ctx.lineWidth=0.5;ctx.stroke()});
+    nodes.forEach(n=>{ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle=n.color+(n.type==='hub'?'40':n.type==='node'?'30':'15');ctx.fill();ctx.beginPath();ctx.arc(n.x,n.y,n.r*0.5,0,Math.PI*2);ctx.fillStyle=n.color;ctx.globalAlpha=n.type==='hub'?0.8:n.type==='node'?0.6:0.4;ctx.fill();ctx.globalAlpha=1});
     requestAnimationFrame(draw);
   }
   draw();
 }
 
-// ── INIT ──────────────────────────────────────────────
-renderFeed();
-renderTopAgents();
-renderSidebarAgents();
-renderTable();
-initNetworkViz();
+// Updated timer
+setInterval(() => {
+  const sec = Math.floor((Date.now() - lastUpdate) / 1000);
+  const el = document.getElementById('updatedAt');
+  if(sec < 60) el.textContent = 'just now';
+  else if(sec < 3600) el.textContent = Math.floor(sec/60) + 'm ago';
+  else el.textContent = Math.floor(sec/3600) + 'h ago';
+}, 10000);
+
+// Polling simulation
+setInterval(() => {
+  lastUpdate = Date.now();
+  const el = document.getElementById('updatedAt');
+  el.textContent = 'just now';
+  el.classList.add('topbar__updated-flash');
+  setTimeout(() => el.classList.remove('topbar__updated-flash'), 500);
+}, 60000);
+
+// Init
+try {
+  renderFeed();
+  renderTopAgents();
+  renderSidebarAgents();
+  renderTable();
+  initNetworkViz('networkCanvas');
+} catch(e) {
+  dataError = true;
+  document.getElementById('errorBanner').classList.add('show');
+  console.error('Data load error:', e);
+}
+
+document.getElementById('retryBtn').addEventListener('click', () => {
+  try {
+    renderFeed(); renderTopAgents(); renderSidebarAgents(); renderTable();
+    document.getElementById('errorBanner').classList.remove('show');
+    dataError = false;
+    showToast('Data refreshed');
+  } catch(e) { showToast('Retry failed', 'error'); }
+});
+
+// Hash routing
+if(location.hash.startsWith('#agent/')){
+  const id = location.hash.replace('#agent/','');
+  setTimeout(() => openDetail(id), 300);
+}
 </script>
 </body>
 </html>
