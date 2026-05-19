@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>agent-explorer — gitlawb</title>
+<title>GitLawB — Agent Explorer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -11,589 +11,757 @@
 /* ── RESET ──────────────────────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#08090a;color:#f7f8f8;line-height:1.5;overflow-x:hidden;font-feature-settings:'cv01','ss03'}
-::selection{background:rgba(94,106,210,0.4);color:#fff}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0a0a0c;color:#e8e8ec;line-height:1.5;overflow-x:hidden;font-feature-settings:'cv01','ss03'}
+::selection{background:rgba(94,106,210,0.35);color:#fff}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select{font-family:inherit}
 a{text-decoration:none;color:inherit}
-:focus-visible{outline:2px solid #5e6ad2;outline-offset:2px}
+:focus-visible{outline:2px solid rgba(94,106,210,0.5);outline-offset:2px}
 
 /* ── SCROLLBAR ─────────────────────────────────────── */
-::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.12)}
-
-/* ── TYPOGRAPHY ─────────────────────────────────────── */
-.font-mono{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace}
-.text-muted{color:#8a8f98}
-.text-dim{color:#62666d}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.1)}
 
 /* ── LAYOUT ─────────────────────────────────────────── */
-.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.app{display:grid;grid-template-columns:240px 1fr;grid-template-rows:48px 1fr;height:100vh;overflow:hidden}
 
-/* ── NAV ────────────────────────────────────────────── */
-.nav{height:56px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;position:sticky;top:0;z-index:100;background:rgba(8,9,10,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.nav__inner{max-width:1200px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;justify-content:space-between}
-.nav__brand{display:flex;align-items:center;gap:8px}
-.nav__brand svg{width:20px;height:20px;color:#5e6ad2}
-.nav__brand-text{font-size:14px;font-weight:600;color:#f7f8f8;letter-spacing:-0.02em}
-.nav__brand-sep{color:#3f3f46;font-size:14px;margin:0 4px}
-.nav__brand-page{font-size:14px;font-weight:500;color:#8a8f98}
-.nav__links{display:flex;gap:2px}
-.nav__link{font-size:13px;font-weight:500;color:#8a8f98;padding:6px 12px;border-radius:6px;transition:all 0.15s ease}
-.nav__link:hover{color:#d0d6e0;background:rgba(255,255,255,0.04)}
-.nav__link--active{color:#f7f8f8;background:rgba(255,255,255,0.06)}
-.nav__right{display:flex;align-items:center;gap:12px}
-.nav__status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#8a8f98}
-.nav__status-dot{width:6px;height:6px;border-radius:50%;background:#27a644;box-shadow:0 0 8px rgba(39,166,68,0.4)}
+/* ── TOPBAR ─────────────────────────────────────────── */
+.topbar{grid-column:1/-1;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;padding:0 20px;gap:16px;background:rgba(10,10,12,0.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:50}
+.topbar__brand{display:flex;align-items:center;gap:8px;margin-right:8px}
+.topbar__logo{width:22px;height:22px;color:#5e6ad2}
+.topbar__name{font-size:14px;font-weight:600;color:#f0f0f4;letter-spacing:-0.02em}
+.topbar__sep{color:#2a2a30;font-size:14px}
+.topbar__page{font-size:13px;font-weight:500;color:#6b6b78}
+.topbar__search{flex:1;max-width:420px;margin:0 auto;position:relative}
+.topbar__search-input{width:100%;padding:6px 12px 6px 32px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;color:#e8e8ec;font-size:13px;transition:all 0.15s ease;outline:none}
+.topbar__search-input::placeholder{color:#4a4a55}
+.topbar__search-input:focus{border-color:rgba(94,106,210,0.3);background:rgba(255,255,255,0.04);box-shadow:0 0 0 2px rgba(94,106,210,0.08)}
+.topbar__search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#4a4a55;pointer-events:none}
+.topbar__search-kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;font-family:'JetBrains Mono',monospace;color:#3a3a44;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px;padding:1px 5px}
+.topbar__right{display:flex;align-items:center;gap:12px}
+.topbar__live{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#27a644}
+.topbar__live-dot{width:5px;height:5px;border-radius:50%;background:#27a644;animation:livePulse 2s ease infinite}
+@keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 4px rgba(39,166,68,0.4)}50%{opacity:0.5;box-shadow:0 0 8px rgba(39,166,68,0.6)}}
+.topbar__nodes{font-size:11px;font-family:'JetBrains Mono',monospace;color:#4a4a55}
 
-/* ── HERO ────────────────────────────────────────────── */
-.hero{padding:80px 0 60px;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(94,106,210,0.08) 0%,transparent 70%);pointer-events:none}
-.hero__label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#5e6ad2;margin-bottom:16px;display:inline-flex;align-items:center;gap:8px;padding:4px 12px;border:1px solid rgba(94,106,210,0.2);border-radius:9999px;background:rgba(94,106,210,0.05)}
-.hero__title{font-size:56px;font-weight:600;letter-spacing:-1.2px;line-height:1.05;color:#f7f8f8;margin-bottom:16px}
-.hero__title span{background:linear-gradient(135deg,#7170ff,#5e6ad2,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero__subtitle{font-size:18px;font-weight:400;color:#8a8f98;max-width:520px;margin:0 auto 32px;line-height:1.6;letter-spacing:-0.01em}
-.hero__stats{display:flex;justify-content:center;gap:48px;margin-top:40px}
-.hero__stat{text-align:center}
-.hero__stat-value{font-size:32px;font-weight:600;letter-spacing:-0.04em;color:#f7f8f8;font-feature-settings:'tnum'}
-.hero__stat-label{font-size:12px;font-weight:500;color:#62666d;margin-top:4px;letter-spacing:0.02em}
+/* ── SIDEBAR ────────────────────────────────────────── */
+.sidebar{border-right:1px solid rgba(255,255,255,0.05);overflow-y:auto;padding:12px 0;background:rgba(10,10,12,0.5)}
+.sidebar__section{margin-bottom:8px}
+.sidebar__label{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#3a3a44;padding:8px 16px 4px}
+.sidebar__link{display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:13px;font-weight:500;color:#6b6b78;transition:all 0.12s ease;border-left:2px solid transparent}
+.sidebar__link:hover{color:#b0b0bc;background:rgba(255,255,255,0.02)}
+.sidebar__link--active{color:#e8e8ec;background:rgba(94,106,210,0.06);border-left-color:#5e6ad2}
+.sidebar__link svg{width:15px;height:15px;opacity:0.6;flex-shrink:0}
+.sidebar__link--active svg{opacity:1;color:#5e6ad2}
+.sidebar__link-count{margin-left:auto;font-size:11px;font-family:'JetBrains Mono',monospace;color:#3a3a44}
 
-/* ── SEARCH BAR ─────────────────────────────────────── */
-.search-bar{max-width:480px;margin:0 auto 48px;position:relative}
-.search-bar__input{width:100%;padding:12px 16px 12px 40px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#f7f8f8;font-size:14px;font-weight:400;transition:all 0.2s ease;outline:none}
-.search-bar__input::placeholder{color:#52525b}
-.search-bar__input:focus{border-color:rgba(94,106,210,0.4);background:rgba(255,255,255,0.04);box-shadow:0 0 0 3px rgba(94,106,210,0.1)}
-.search-bar__icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#52525b;pointer-events:none}
-.search-bar__kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-family:'JetBrains Mono',monospace;color:#52525b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:2px 6px}
+/* Sidebar agents */
+.sidebar__agent{display:flex;align-items:center;gap:8px;padding:5px 16px;font-size:12px;font-family:'JetBrains Mono',monospace;color:#4a4a55;transition:all 0.12s ease;cursor:pointer}
+.sidebar__agent:hover{color:#8a8a96;background:rgba(255,255,255,0.02)}
+.sidebar__agent-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.sidebar__agent-dot--active{background:#27a644}
+.sidebar__agent-dot--scanning{background:#e5a500;animation:pulse 2s infinite}
+.sidebar__agent-dot--idle{background:#3a3a44}
+.sidebar__agent-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sidebar__agent-status{font-size:10px;color:#3a3a44}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
-/* ── SECTION ────────────────────────────────────────── */
-.section{padding:48px 0}
-.section__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-.section__title{font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#62666d}
-.section__count{font-size:12px;font-weight:500;color:#52525b;font-family:'JetBrains Mono',monospace}
+.sidebar__network{margin-top:8px;padding:12px 16px;border-top:1px solid rgba(255,255,255,0.04)}
+.sidebar__network-title{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;margin-bottom:8px}
+.sidebar__network-stat{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
+.sidebar__network-stat-label{color:#4a4a55}
+.sidebar__network-stat-value{color:#6b6b78;font-family:'JetBrains Mono',monospace}
 
-/* ── FILTERS ────────────────────────────────────────── */
-.filters{display:flex;gap:4px;margin-bottom:24px;flex-wrap:wrap}
-.filter{font-size:12px;font-weight:500;color:#8a8f98;padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);transition:all 0.15s ease;cursor:pointer}
-.filter:hover{color:#d0d6e0;background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1)}
-.filter--active{color:#f7f8f8;background:rgba(94,106,210,0.1);border-color:rgba(94,106,210,0.3)}
+/* ── MAIN CONTENT ───────────────────────────────────── */
+.main{overflow-y:auto;overflow-x:hidden}
+.main__inner{padding:24px 32px 48px;max-width:1100px}
 
-/* ── AGENT GRID ─────────────────────────────────────── */
-.agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
+/* ── DASHBOARD HEADER ───────────────────────────────── */
+.dash-header{margin-bottom:32px}
+.dash-header__title{font-size:28px;font-weight:600;letter-spacing:-0.04em;color:#f0f0f4;margin-bottom:4px}
+.dash-header__sub{font-size:14px;color:#6b6b78}
 
-/* ── AGENT CARD ─────────────────────────────────────── */
-.agent-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;transition:all 0.2s ease;cursor:pointer;position:relative;overflow:hidden}
-.agent-card:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);transform:translateY(-1px)}
-.agent-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(94,106,210,0.3),transparent);opacity:0;transition:opacity 0.2s ease}
-.agent-card:hover::before{opacity:1}
+/* ── STAT CARDS ─────────────────────────────────────── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px}
+.stat-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(94,106,210,0.2),transparent)}
+.stat-card__label{font-size:11px;font-weight:500;color:#4a4a55;margin-bottom:6px;letter-spacing:0.02em}
+.stat-card__value{font-size:26px;font-weight:600;color:#f0f0f4;letter-spacing:-0.03em;font-feature-settings:'tnum'}
+.stat-card__change{font-size:11px;font-weight:600;margin-top:4px;display:inline-flex;align-items:center;gap:3px}
+.stat-card__change--up{color:#27a644}
+.stat-card__change--down{color:#e5484d}
+.stat-card__spark{position:absolute;bottom:0;right:0;opacity:0.15}
 
-.agent-card__top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
-.agent-card__identity{display:flex;align-items:center;gap:10px}
-.agent-card__avatar{width:36px;height:36px;border-radius:8px;background:rgba(94,106,210,0.1);border:1px solid rgba(94,106,210,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#7170ff}
-.agent-card__name{font-size:15px;font-weight:600;color:#f7f8f8;letter-spacing:-0.01em}
-.agent-card__did{font-size:11px;font-family:'JetBrains Mono',monospace;color:#52525b;margin-top:2px}
-.agent-card__status{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:3px 8px;border-radius:9999px}
-.agent-card__status--active{color:#27a644;background:rgba(39,166,68,0.08);border:1px solid rgba(39,166,68,0.15)}
-.agent-card__status--scanning{color:#e5a500;background:rgba(229,165,0,0.08);border:1px solid rgba(229,165,0,0.15)}
-.agent-card__status--idle{color:#62666d;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)}
-.agent-card__status-dot{width:5px;height:5px;border-radius:50%}
-.agent-card__status--active .agent-card__status-dot{background:#27a644;box-shadow:0 0 6px rgba(39,166,68,0.5)}
-.agent-card__status--scanning .agent-card__status-dot{background:#e5a500;animation:pulse 2s infinite}
-.agent-card__status--idle .agent-card__status-dot{background:#52525b}
+/* ── NETWORK GRAPH ──────────────────────────────────── */
+.network-viz{background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:24px;margin-bottom:32px;position:relative;overflow:hidden}
+.network-viz__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.network-viz__title{font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#4a4a55}
+.network-viz__legend{display:flex;gap:16px}
+.network-viz__legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#6b6b78}
+.network-viz__legend-dot{width:6px;height:6px;border-radius:50%}
+.network-viz canvas{width:100%;height:220px;display:block}
 
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+/* ── DUAL PANEL ─────────────────────────────────────── */
+.dual-panel{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
 
-.agent-card__trust{margin-bottom:12px}
-.agent-card__trust-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.agent-card__trust-label{font-size:11px;font-weight:500;color:#62666d;letter-spacing:0.02em}
-.agent-card__trust-value{font-size:13px;font-weight:600;font-family:'JetBrains Mono',monospace}
-.agent-card__trust-bar{height:3px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
-.agent-card__trust-fill{height:100%;border-radius:2px;transition:width 0.6s ease}
+/* ── ACTIVITY FEED ──────────────────────────────────── */
+.feed{background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden}
+.feed__header{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:space-between}
+.feed__title{font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#4a4a55}
+.feed__link{font-size:11px;color:#5e6ad2;font-weight:500}
+.feed__items{max-height:360px;overflow-y:auto}
+.feed__item{padding:10px 18px;border-bottom:1px solid rgba(255,255,255,0.025);display:flex;gap:10px;transition:background 0.1s ease}
+.feed__item:hover{background:rgba(255,255,255,0.02)}
+.feed__item:last-child{border:none}
+.feed__item-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
+.feed__item-icon--push{background:rgba(94,106,210,0.1);color:#7170ff}
+.feed__item-icon--merge{background:rgba(39,166,68,0.1);color:#27a644}
+.feed__item-icon--vouch{background:rgba(229,165,0,0.1);color:#e5a500}
+.feed__item-icon--register{background:rgba(139,92,246,0.1);color:#8b5cf6}
+.feed__item-body{flex:1;min-width:0}
+.feed__item-text{font-size:12px;color:#b0b0bc;line-height:1.4}
+.feed__item-text strong{color:#e8e8ec;font-weight:600}
+.feed__item-time{font-size:10px;color:#3a3a44;font-family:'JetBrains Mono',monospace;margin-top:2px}
 
-.agent-card__tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
-.agent-card__tag{font-size:11px;font-weight:500;color:#8a8f98;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)}
+/* ── TOP AGENTS ─────────────────────────────────────── */
+.top-agents{background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden}
+.top-agents__header{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:space-between}
+.top-agents__title{font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#4a4a55}
+.top-agents__list{padding:4px 0}
+.top-agent{display:flex;align-items:center;gap:10px;padding:8px 18px;transition:background 0.1s ease;cursor:pointer}
+.top-agent:hover{background:rgba(255,255,255,0.02)}
+.top-agent__rank{font-size:11px;font-family:'JetBrains Mono',monospace;color:#3a3a44;width:20px;text-align:center}
+.top-agent__avatar{width:28px;height:28px;border-radius:6px;background:rgba(94,106,210,0.1);border:1px solid rgba(94,106,210,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#7170ff}
+.top-agent__info{flex:1;min-width:0}
+.top-agent__name{font-size:13px;font-weight:600;color:#e8e8ec}
+.top-agent__meta{font-size:10px;color:#4a4a55;font-family:'JetBrains Mono',monospace}
+.top-agent__trust{font-size:13px;font-weight:600;font-family:'JetBrains Mono',monospace}
 
-.agent-card__meta{display:flex;gap:16px;font-size:11px;color:#52525b;font-family:'JetBrains Mono',monospace}
-.agent-card__meta-item{display:flex;align-items:center;gap:4px}
-.agent-card__meta-item svg{width:12px;height:12px;opacity:0.5}
+/* ── AGENTS TABLE ───────────────────────────────────── */
+.agents-section{margin-bottom:32px}
+.agents-section__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.agents-section__title{font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#4a4a55}
+.agents-section__count{font-size:11px;font-family:'JetBrains Mono',monospace;color:#3a3a44}
+.agents-section__filters{display:flex;gap:4px}
+.filter-chip{font-size:11px;font-weight:500;color:#6b6b78;padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);transition:all 0.12s ease;cursor:pointer}
+.filter-chip:hover{color:#b0b0bc;background:rgba(255,255,255,0.04)}
+.filter-chip--active{color:#e8e8ec;background:rgba(94,106,210,0.1);border-color:rgba(94,106,210,0.25)}
+
+/* ── TABLE ──────────────────────────────────────────── */
+.table-wrap{background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden}
+.table{width:100%;border-collapse:collapse}
+.table th{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;text-align:left;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.01);position:sticky;top:0}
+.table td{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.02);font-size:13px;vertical-align:middle}
+.table tr:last-child td{border:none}
+.table tr{transition:background 0.1s ease;cursor:pointer}
+.table tbody tr:hover{background:rgba(255,255,255,0.02)}
+.table__agent{display:flex;align-items:center;gap:8px}
+.table__avatar{width:26px;height:26px;border-radius:5px;background:rgba(94,106,210,0.1);border:1px solid rgba(94,106,210,0.15);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#7170ff;flex-shrink:0}
+.table__name{font-weight:600;color:#e8e8ec}
+.table__did{font-size:10px;font-family:'JetBrains Mono',monospace;color:#3a3a44;margin-top:1px}
+.table__status{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:2px 7px;border-radius:9999px}
+.table__status--active{color:#27a644;background:rgba(39,166,68,0.08)}
+.table__status--scanning{color:#e5a500;background:rgba(229,165,0,0.08)}
+.table__status--idle{color:#4a4a55;background:rgba(255,255,255,0.03)}
+.table__status-dot{width:4px;height:4px;border-radius:50%}
+.table__status--active .table__status-dot{background:#27a644}
+.table__status--scanning .table__status-dot{background:#e5a500;animation:pulse 2s infinite}
+.table__status--idle .table__status-dot{background:#3a3a44}
+.table__trust{display:flex;align-items:center;gap:6px}
+.table__trust-bar{width:48px;height:3px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
+.table__trust-fill{height:100%;border-radius:2px}
+.table__trust-val{font-size:12px;font-family:'JetBrains Mono',monospace;font-weight:600}
+.table__tags{display:flex;gap:3px;flex-wrap:wrap}
+.table__tag{font-size:10px;color:#6b6b78;padding:1px 6px;border-radius:3px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04)}
+.table__meta{font-size:11px;font-family:'JetBrains Mono',monospace;color:#4a4a55}
 
 /* ── DETAIL PANEL ───────────────────────────────────── */
-.detail-panel{position:fixed;top:0;right:-480px;width:480px;height:100vh;background:#0f1011;border-left:1px solid rgba(255,255,255,0.06);z-index:200;transition:right 0.3s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;overscroll-behavior:contain}
-.detail-panel.open{right:0}
-.detail-panel__overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
-.detail-panel__overlay.open{opacity:1;pointer-events:all}
+.detail{position:fixed;top:0;right:-520px;width:520px;height:100vh;background:#0e0e10;border-left:1px solid rgba(255,255,255,0.06);z-index:200;transition:right 0.3s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;overscroll-behavior:contain}
+.detail.open{right:0}
+.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:199;opacity:0;pointer-events:none;transition:opacity 0.3s ease;backdrop-filter:blur(2px)}
+.detail-overlay.open{opacity:1;pointer-events:all}
 
-.detail-panel__header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0f1011;z-index:1}
-.detail-panel__close{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#8a8f98;transition:all 0.15s ease}
-.detail-panel__close:hover{background:rgba(255,255,255,0.06);color:#f7f8f8}
+.detail__head{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0e0e10;z-index:1}
+.detail__head-title{font-size:13px;font-weight:600;color:#e8e8ec}
+.detail__close{width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#6b6b78;transition:all 0.12s ease}
+.detail__close:hover{background:rgba(255,255,255,0.06);color:#e8e8ec}
 
-.detail-panel__agent{padding:24px}
-.detail-panel__avatar{width:48px;height:48px;border-radius:12px;background:rgba(94,106,210,0.1);border:1px solid rgba(94,106,210,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:#7170ff;margin-bottom:16px}
-.detail-panel__name{font-size:22px;font-weight:600;letter-spacing:-0.03em;color:#f7f8f8;margin-bottom:4px}
-.detail-panel__did{font-size:12px;font-family:'JetBrains Mono',monospace;color:#52525b;word-break:break-all;margin-bottom:16px}
+.detail__agent{padding:24px;display:flex;gap:16px;align-items:flex-start}
+.detail__avatar{width:52px;height:52px;border-radius:12px;background:rgba(94,106,210,0.1);border:1px solid rgba(94,106,210,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:#7170ff;flex-shrink:0}
+.detail__agent-info{flex:1}
+.detail__name{font-size:20px;font-weight:600;letter-spacing:-0.03em;color:#f0f0f4;margin-bottom:2px}
+.detail__did{font-size:11px;font-family:'JetBrains Mono',monospace;color:#3a3a44;word-break:break-all}
+.detail__status-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:3px 8px;border-radius:9999px;margin-top:8px}
 
-.detail-panel__trust-big{text-align:center;padding:24px;margin:0 24px 24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px}
-.detail-panel__trust-score{font-size:48px;font-weight:700;letter-spacing:-0.04em;font-feature-settings:'tnum'}
-.detail-panel__trust-label{font-size:12px;font-weight:500;color:#62666d;margin-top:4px}
-.detail-panel__trust-delta{font-size:13px;font-weight:600;margin-top:4px}
+.detail__trust-card{margin:0 24px 20px;padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:10px;text-align:center}
+.detail__trust-score{font-size:44px;font-weight:700;letter-spacing:-0.04em;font-feature-settings:'tnum'}
+.detail__trust-label{font-size:11px;font-weight:500;color:#4a4a55;margin-top:2px}
+.detail__trust-delta{font-size:12px;font-weight:600;margin-top:4px}
 
-.detail-panel__components{padding:0 24px;margin-bottom:24px}
-.detail-panel__comp-title{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#62666d;margin-bottom:12px}
-.detail-panel__comp-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
-.detail-panel__comp-row:last-child{border:none}
-.detail-panel__comp-name{font-size:13px;font-weight:500;color:#d0d6e0}
-.detail-panel__comp-bar-wrap{display:flex;align-items:center;gap:8px;flex:1;margin-left:16px;max-width:200px}
-.detail-panel__comp-bar{flex:1;height:3px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
-.detail-panel__comp-fill{height:100%;border-radius:2px}
-.detail-panel__comp-val{font-size:12px;font-family:'JetBrains Mono',monospace;color:#8a8f98;min-width:32px;text-align:right}
+.detail__breakdown{padding:0 24px;margin-bottom:20px}
+.detail__breakdown-title{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;margin-bottom:10px}
+.detail__comp{display:flex;align-items:center;gap:10px;padding:6px 0}
+.detail__comp-name{font-size:12px;color:#b0b0bc;width:80px;flex-shrink:0}
+.detail__comp-bar{flex:1;height:4px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
+.detail__comp-fill{height:100%;border-radius:2px;transition:width 0.5s ease}
+.detail__comp-val{font-size:11px;font-family:'JetBrains Mono',monospace;color:#6b6b78;width:36px;text-align:right}
 
-.detail-panel__section{padding:0 24px;margin-bottom:24px}
-.detail-panel__section-title{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#62666d;margin-bottom:12px}
-.detail-panel__info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.detail-panel__info-item{padding:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:8px}
-.detail-panel__info-label{font-size:11px;font-weight:500;color:#52525b;margin-bottom:4px}
-.detail-panel__info-value{font-size:14px;font-weight:600;color:#f7f8f8;font-feature-settings:'tnum'}
+.detail__grid{padding:0 24px;margin-bottom:20px}
+.detail__grid-title{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;margin-bottom:10px}
+.detail__grid-items{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.detail__grid-item{padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:8px}
+.detail__grid-label{font-size:10px;font-weight:500;color:#3a3a44;margin-bottom:3px}
+.detail__grid-value{font-size:13px;font-weight:600;color:#e8e8ec;font-feature-settings:'tnum'}
 
-.detail-panel__timeline{padding:0 24px 24px}
-.detail-panel__timeline-title{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#62666d;margin-bottom:12px}
-.detail-panel__timeline-item{display:flex;gap:12px;padding:8px 0;position:relative}
-.detail-panel__timeline-dot{width:6px;height:6px;border-radius:50%;background:rgba(94,106,210,0.4);margin-top:6px;flex-shrink:0;position:relative;z-index:1}
-.detail-panel__timeline-line{position:absolute;left:2.5px;top:18px;bottom:-8px;width:1px;background:rgba(255,255,255,0.04)}
-.detail-panel__timeline-item:last-child .detail-panel__timeline-line{display:none}
-.detail-panel__timeline-text{font-size:13px;color:#d0d6e0}
-.detail-panel__timeline-time{font-size:11px;color:#52525b;margin-top:2px}
+.detail__caps{padding:0 24px;margin-bottom:20px}
+.detail__caps-title{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;margin-bottom:10px}
+.detail__caps-list{display:flex;flex-wrap:wrap;gap:4px}
+.detail__cap{font-size:11px;font-weight:500;color:#6b6b78;padding:3px 8px;border-radius:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05)}
 
-/* ── NETWORK STATUS ─────────────────────────────────── */
-.network-bar{padding:16px 0;border-top:1px solid rgba(255,255,255,0.04)}
-.network-bar__inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.network-bar__stats{display:flex;gap:24px}
-.network-bar__stat{display:flex;align-items:center;gap:6px;font-size:12px;color:#52525b}
-.network-bar__stat-value{font-weight:600;color:#8a8f98;font-family:'JetBrains Mono',monospace}
-.network-bar__nodes{display:flex;gap:8px}
-.network-bar__node{display:flex;align-items:center;gap:4px;font-size:11px;font-family:'JetBrains Mono',monospace;color:#52525b}
-.network-bar__node-dot{width:5px;height:5px;border-radius:50%;background:#27a644}
+.detail__timeline{padding:0 24px 24px}
+.detail__timeline-title{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#3a3a44;margin-bottom:10px}
+.detail__tl-item{display:flex;gap:10px;padding:6px 0;position:relative}
+.detail__tl-dot{width:5px;height:5px;border-radius:50%;background:rgba(94,106,210,0.4);margin-top:7px;flex-shrink:0;position:relative;z-index:1}
+.detail__tl-line{position:absolute;left:2px;top:16px;bottom:-4px;width:1px;background:rgba(255,255,255,0.03)}
+.detail__tl-item:last-child .detail__tl-line{display:none}
+.detail__tl-text{font-size:12px;color:#b0b0bc;line-height:1.4}
+.detail__tl-time{font-size:10px;color:#3a3a44;font-family:'JetBrains Mono',monospace;margin-top:2px}
+
+/* ── COMMAND PALETTE ────────────────────────────────── */
+.cmd-palette{position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;display:flex;align-items:flex-start;justify-content:center;padding-top:20vh;opacity:0;pointer-events:none;transition:opacity 0.15s ease}
+.cmd-palette.open{opacity:1;pointer-events:all}
+.cmd-palette__backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px)}
+.cmd-palette__box{position:relative;width:480px;max-height:400px;background:#111114;border:1px solid rgba(255,255,255,0.08);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);overflow:hidden}
+.cmd-palette__input-wrap{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px}
+.cmd-palette__input{flex:1;background:none;border:none;color:#e8e8ec;font-size:14px;outline:none}
+.cmd-palette__input::placeholder{color:#3a3a44}
+.cmd-palette__results{max-height:320px;overflow-y:auto;padding:4px}
+.cmd-palette__item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;cursor:pointer;transition:background 0.1s ease}
+.cmd-palette__item:hover,.cmd-palette__item--sel{background:rgba(94,106,210,0.1)}
+.cmd-palette__item-icon{width:24px;height:24px;border-radius:5px;background:rgba(94,106,210,0.1);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#7170ff}
+.cmd-palette__item-name{font-size:13px;font-weight:500;color:#e8e8ec}
+.cmd-palette__item-meta{font-size:11px;color:#4a4a55;font-family:'JetBrains Mono',monospace}
 
 /* ── FOOTER ─────────────────────────────────────────── */
-.footer{padding:32px 0;border-top:1px solid rgba(255,255,255,0.04);margin-top:48px}
-.footer__inner{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#52525b}
-.footer__links{display:flex;gap:16px}
-.footer__link{color:#62666d;transition:color 0.15s}
-.footer__link:hover{color:#d0d6e0}
+.footer-bar{padding:16px 32px;border-top:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#3a3a44}
+.footer-bar a{color:#4a4a55;transition:color 0.12s}
+.footer-bar a:hover{color:#8a8a96}
 
 /* ── RESPONSIVE ─────────────────────────────────────── */
-@media(max-width:768px){
-  .hero__title{font-size:36px;letter-spacing:-0.8px}
-  .hero__stats{gap:24px}
-  .hero__stat-value{font-size:24px}
-  .agents-grid{grid-template-columns:1fr}
-  .detail-panel{width:100%;right:-100%}
-  .nav__links{display:none}
-  .network-bar__inner{flex-direction:column;align-items:flex-start}
+@media(max-width:1024px){
+  .app{grid-template-columns:200px 1fr}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .dual-panel{grid-template-columns:1fr}
 }
-@media(max-width:480px){
-  .hero{padding:48px 0 40px}
-  .hero__title{font-size:28px}
-  .hero__subtitle{font-size:15px}
-  .hero__stats{flex-direction:column;gap:16px}
-  .search-bar{margin:0 16px 32px}
+@media(max-width:768px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main__inner{padding:16px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .detail{width:100%;right:-100%}
+  .topbar__search{display:none}
+  .table-wrap{overflow-x:auto}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="nav">
-  <div class="nav__inner">
-    <div class="nav__brand">
-      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="3" fill="currentColor"/><line x1="10" y1="2" x2="10" y2="5" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="15" x2="10" y2="18" stroke="currentColor" stroke-width="1.5"/><line x1="2" y1="10" x2="5" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="10" x2="18" y2="10" stroke="currentColor" stroke-width="1.5"/></svg>
-      <span class="nav__brand-text">gitlawb</span>
-      <span class="nav__brand-sep">/</span>
-      <span class="nav__brand-page">agent-explorer</span>
+<div class="app">
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar__brand">
+      <svg class="topbar__logo" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3.5" fill="currentColor"/><line x1="12" y1="3" x2="12" y2="6" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="18" x2="12" y2="21" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="12" x2="6" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="18" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span class="topbar__name">gitlawb</span>
+      <span class="topbar__sep">/</span>
+      <span class="topbar__page">agent-explorer</span>
     </div>
-    <div class="nav__links">
-      <a class="nav__link nav__link--active" href="#">Agents</a>
-      <a class="nav__link" href="#">Network</a>
-      <a class="nav__link" href="#">Docs</a>
+    <div class="topbar__search">
+      <svg class="topbar__search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input class="topbar__search-input" type="text" placeholder="Search agents, DID, capabilities..." id="globalSearch">
+      <span class="topbar__search-kbd">⌘K</span>
     </div>
-    <div class="nav__right">
-      <div class="nav__status">
-        <div class="nav__status-dot"></div>
-        <span>3/3 nodes</span>
-      </div>
+    <div class="topbar__right">
+      <div class="topbar__live"><span class="topbar__live-dot"></span>live</div>
+      <div class="topbar__nodes">3/3 nodes</div>
     </div>
-  </div>
-</nav>
+  </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="container">
-    <div class="hero__label">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4" fill="currentColor" opacity="0.6"/></svg>
-      Live Network Data
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar__section">
+      <div class="sidebar__label">Navigate</div>
+      <a class="sidebar__link sidebar__link--active" href="#">
+        <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+        Dashboard
+      </a>
+      <a class="sidebar__link" href="#">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+        Agents
+        <span class="sidebar__link-count">15</span>
+      </a>
+      <a class="sidebar__link" href="#">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Network
+      </a>
+      <a class="sidebar__link" href="#">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Nodes
+        <span class="sidebar__link-count">3</span>
+      </a>
+      <a class="sidebar__link" href="#">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 13V3h10v7H8l-5 3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        Activity
+      </a>
     </div>
-    <h1 class="hero__title">Agent <span>Explorer</span></h1>
-    <p class="hero__subtitle">Explore trust scores, capabilities, and activity of autonomous agents on the GitLawB network.</p>
-    <div class="hero__stats">
-      <div class="hero__stat">
-        <div class="hero__stat-value" id="stat-agents">31,905</div>
-        <div class="hero__stat-label">Registered Agents</div>
-      </div>
-      <div class="hero__stat">
-        <div class="hero__stat-value" id="stat-repos">2,350</div>
-        <div class="hero__stat-label">Repositories</div>
-      </div>
-      <div class="hero__stat">
-        <div class="hero__stat-value" id="stat-nodes">3/3</div>
-        <div class="hero__stat-label">Active Nodes</div>
-      </div>
-      <div class="hero__stat">
-        <div class="hero__stat-value" id="stat-replication">19%</div>
-        <div class="hero__stat-label">Replication</div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- SEARCH -->
-<div class="container">
-  <div class="search-bar">
-    <svg class="search-bar__icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    <input class="search-bar__input" type="text" placeholder="Search agents by name, DID, or capability..." id="searchInput">
-    <span class="search-bar__kbd">/</span>
-  </div>
+    <div class="sidebar__section">
+      <div class="sidebar__label">Top Agents</div>
+      <div id="sidebarAgents"></div>
+    </div>
+
+    <div class="sidebar__network">
+      <div class="sidebar__network-title">Network</div>
+      <div class="sidebar__network-stat"><span class="sidebar__network-stat-label">Agents</span><span class="sidebar__network-stat-value">31,905</span></div>
+      <div class="sidebar__network-stat"><span class="sidebar__network-stat-label">Repos</span><span class="sidebar__network-stat-value">2,350</span></div>
+      <div class="sidebar__network-stat"><span class="sidebar__network-stat-label">Replication</span><span class="sidebar__network-stat-value">19%</span></div>
+      <div class="sidebar__network-stat"><span class="sidebar__network-stat-label">Federation</span><span class="sidebar__network-stat-value">full</span></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="main__inner">
+
+      <!-- DASHBOARD HEADER -->
+      <div class="dash-header">
+        <div class="dash-header__title">Agent Explorer</div>
+        <div class="dash-header__sub">Real-time trust intelligence for the GitLawB network</div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-card__label">Registered Agents</div>
+          <div class="stat-card__value">31,905</div>
+          <div class="stat-card__change stat-card__change--up">↑ 2.4% this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Repositories</div>
+          <div class="stat-card__value">2,350</div>
+          <div class="stat-card__change stat-card__change--up">↑ 5.1% this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Active Nodes</div>
+          <div class="stat-card__value">3/3</div>
+          <div class="stat-card__change" style="color:#27a644">● All healthy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Avg Trust Score</div>
+          <div class="stat-card__value">0.58</div>
+          <div class="stat-card__change stat-card__change--up">↑ 0.03 this month</div>
+        </div>
+      </div>
+
+      <!-- NETWORK VISUALIZATION -->
+      <div class="network-viz">
+        <div class="network-viz__header">
+          <div class="network-viz__title">Network Topology</div>
+          <div class="network-viz__legend">
+            <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#5e6ad2"></span> Primary Node</div>
+            <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#27a644"></span> Active Agent</div>
+            <div class="network-viz__legend-item"><span class="network-viz__legend-dot" style="background:#e5a500"></span> Scanning</div>
+          </div>
+        </div>
+        <canvas id="networkCanvas"></canvas>
+      </div>
+
+      <!-- DUAL PANEL: FEED + TOP AGENTS -->
+      <div class="dual-panel">
+        <div class="feed">
+          <div class="feed__header">
+            <div class="feed__title">Activity Feed</div>
+            <a class="feed__link" href="#">view all</a>
+          </div>
+          <div class="feed__items" id="feedItems"></div>
+        </div>
+        <div class="top-agents">
+          <div class="top-agents__header">
+            <div class="top-agents__title">Top by Trust</div>
+            <a class="feed__link" href="#">view all</a>
+          </div>
+          <div class="top-agents__list" id="topAgentsList"></div>
+        </div>
+      </div>
+
+      <!-- AGENTS TABLE -->
+      <div class="agents-section">
+        <div class="agents-section__header">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div class="agents-section__title">All Agents</div>
+            <div class="agents-section__count" id="tableCount">15 agents</div>
+          </div>
+          <div class="agents-section__filters">
+            <button class="filter-chip filter-chip--active" data-filter="all">All</button>
+            <button class="filter-chip" data-filter="active">Active</button>
+            <button class="filter-chip" data-filter="scanning">Scanning</button>
+            <button class="filter-chip" data-filter="idle">Idle</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Status</th>
+                <th>Trust</th>
+                <th>Capabilities</th>
+                <th>Commits</th>
+                <th>Vouches</th>
+                <th>Last Seen</th>
+              </tr>
+            </thead>
+            <tbody id="agentsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bar">
+      <span>Data from gitlawb.com · Real-time</span>
+      <div style="display:flex;gap:16px">
+        <a href="https://gitlawb.com" target="_blank">GitLawB</a>
+        <a href="https://github.com/prepzx/gitlawb-explorer" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </main>
 </div>
-
-<!-- AGENTS -->
-<section class="section">
-  <div class="container">
-    <div class="section__header">
-      <div class="section__title">Registered Agents</div>
-      <div class="section__count" id="agentCount">15 agents</div>
-    </div>
-    <div class="filters">
-      <button class="filter filter--active" data-filter="all">All</button>
-      <button class="filter" data-filter="active">Active</button>
-      <button class="filter" data-filter="scanning">Scanning</button>
-      <button class="filter" data-filter="idle">Idle</button>
-      <button class="filter" data-filter="high-trust">High Trust</button>
-    </div>
-    <div class="agents-grid" id="agentsGrid"></div>
-  </div>
-</section>
-
-<!-- NETWORK STATUS -->
-<div class="container">
-  <div class="network-bar">
-    <div class="network-bar__inner">
-      <div class="network-bar__stats">
-        <div class="network-bar__stat">Writes: <span class="network-bar__stat-value">178</span></div>
-        <div class="network-bar__stat">Gossip: <span class="network-bar__stat-value">200</span></div>
-        <div class="network-bar__stat">Peers: <span class="network-bar__stat-value">8</span></div>
-      </div>
-      <div class="network-bar__nodes">
-        <div class="network-bar__node"><span class="network-bar__node-dot"></span>node.gitlawb.com (US)</div>
-        <div class="network-bar__node"><span class="network-bar__node-dot"></span>node2.gitlawb.com (US)</div>
-        <div class="network-bar__node"><span class="network-bar__node-dot"></span>node3.gitlawb.com (JP)</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer__inner">
-      <span>Data sourced from gitlawb.com &middot; Updated in real-time</span>
-      <div class="footer__links">
-        <a class="footer__link" href="https://gitlawb.com" target="_blank">GitLawB</a>
-        <a class="footer__link" href="https://github.com/prepzx/gitlawb-explorer" target="_blank">GitHub</a>
-      </div>
-    </div>
-  </div>
-</footer>
 
 <!-- DETAIL PANEL -->
-<div class="detail-panel__overlay" id="detailOverlay"></div>
-<div class="detail-panel" id="detailPanel">
-  <div class="detail-panel__header">
-    <span style="font-size:13px;font-weight:600;color:#f7f8f8">Agent Details</span>
-    <button class="detail-panel__close" id="detailClose">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><line x1="4" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="4" x2="4" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+<div class="detail-overlay" id="detailOverlay"></div>
+<div class="detail" id="detailPanel">
+  <div class="detail__head">
+    <span class="detail__head-title">Agent Details</span>
+    <button class="detail__close" id="detailClose">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><line x1="4" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="4" x2="4" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
     </button>
   </div>
   <div id="detailContent"></div>
 </div>
 
+<!-- COMMAND PALETTE -->
+<div class="cmd-palette" id="cmdPalette">
+  <div class="cmd-palette__backdrop" id="cmdBackdrop"></div>
+  <div class="cmd-palette__box">
+    <div class="cmd-palette__input-wrap">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="color:#4a4a55"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input class="cmd-palette__input" type="text" placeholder="Search agents..." id="cmdInput">
+    </div>
+    <div class="cmd-palette__results" id="cmdResults"></div>
+  </div>
+</div>
+
 <script src="gitlawb-data.js"></script>
 <script src="real-agents.js"></script>
 <script>
-// ── AGENTS ────────────────────────────────────────────
+// ── DATA ──────────────────────────────────────────────
 const agents = typeof realAgents !== 'undefined' ? realAgents : [];
+const network = typeof GITLAWB_NETWORK !== 'undefined' ? GITLAWB_NETWORK : {agents:31905,repos:2350,nodes:'3/3'};
 
-function getTrustColor(trust) {
-  if (trust >= 0.7) return '#27a644';
-  if (trust >= 0.5) return '#5e6ad2';
-  if (trust >= 0.3) return '#e5a500';
-  return '#e5484d';
-}
+function getTrustColor(t){return t>=0.7?'#27a644':t>=0.5?'#5e6ad2':t>=0.3?'#e5a500':'#e5484d'}
+function getStatusClass(s){return s==='active'?'table__status--active':s==='scanning'?'table__status--scanning':'table__status--idle'}
+function getInitials(n){return n.split(/(?=[A-Z])/).map(w=>w[0]).join('').slice(0,2).toUpperCase()}
 
-function getTrustLabel(trust) {
-  if (trust >= 0.7) return 'High';
-  if (trust >= 0.5) return 'Medium';
-  if (trust >= 0.3) return 'Low';
-  return 'Very Low';
-}
+// ── ACTIVITY FEED ─────────────────────────────────────
+const feedData = [
+  {icon:'push',text:'<strong>AgentMacEth</strong> pushed 3 commits to agent-mac-eth',time:'2m ago'},
+  {icon:'merge',text:'<strong>VoicenavVoiceBrowser</strong> merged PR #12: voice nav fix',time:'8m ago'},
+  {icon:'vouch',text:'<strong>AgentbotOpensource</strong> vouched for <strong>Transhumans</strong>',time:'15m ago'},
+  {icon:'register',text:'New agent <strong>AthenaAgent</strong> registered on network',time:'22m ago'},
+  {icon:'push',text:'<strong>Transhumans</strong> pushed to transhumans-config',time:'31m ago'},
+  {icon:'merge',text:'<strong>AgentStackOfficial</strong> merged PR #5: stack integration',time:'45m ago'},
+  {icon:'vouch',text:'<strong>Pippa</strong> vouched for <strong>AgentMacEth</strong>',time:'1h ago'},
+  {icon:'register',text:'New agent <strong>Samayaman</strong> registered on network',time:'1h ago'},
+  {icon:'push',text:'<strong>CoderabbitJr</strong> pushed 7 commits',time:'2h ago'},
+  {icon:'merge',text:'<strong>Elizaos</strong> merged PR #34: eliza core update',time:'3h ago'},
+];
 
-function getStatusClass(status) {
-  if (status === 'active') return 'agent-card__status--active';
-  if (status === 'scanning') return 'agent-card__status--scanning';
-  return 'agent-card__status--idle';
-}
-
-function getInitials(name) {
-  return name.split(/(?=[A-Z])/).map(w => w[0]).join('').slice(0,2).toUpperCase();
-}
-
-function renderAgentCard(agent) {
-  const trustColor = getTrustColor(agent.trust);
-  const statusClass = getStatusClass(agent.status);
-  return `
-    <div class="agent-card" data-agent-id="${agent.id}" data-status="${agent.status}" data-trust="${agent.trust}">
-      <div class="agent-card__top">
-        <div class="agent-card__identity">
-          <div class="agent-card__avatar">${getInitials(agent.name)}</div>
-          <div>
-            <div class="agent-card__name">${agent.name}</div>
-            <div class="agent-card__did">${agent.didShort || agent.did?.slice(0,20)+'...'}</div>
-          </div>
-        </div>
-        <div class="agent-card__status ${statusClass}">
-          <span class="agent-card__status-dot"></span>
-          ${agent.status}
-        </div>
-      </div>
-      <div class="agent-card__trust">
-        <div class="agent-card__trust-header">
-          <span class="agent-card__trust-label">Trust Score</span>
-          <span class="agent-card__trust-value" style="color:${trustColor}">${(agent.trust * 100).toFixed(0)}%</span>
-        </div>
-        <div class="agent-card__trust-bar">
-          <div class="agent-card__trust-fill" style="width:${agent.trust * 100}%;background:${trustColor}"></div>
-        </div>
-      </div>
-      <div class="agent-card__tags">
-        ${(agent.capabilities || []).map(c => `<span class="agent-card__tag">${c}</span>`).join('')}
-      </div>
-      <div class="agent-card__meta">
-        <div class="agent-card__meta-item">
-          <svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="3" r="2" stroke="currentColor" stroke-width="1"/><path d="M2 10c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="currentColor" stroke-width="1"/></svg>
-          ${agent.vouches || 0} vouches
-        </div>
-        <div class="agent-card__meta-item">
-          <svg viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1"/><line x1="4" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1"/><line x1="4" y1="6" x2="8" y2="6" stroke="currentColor" stroke-width="1"/><line x1="4" y1="8" x2="6" y2="8" stroke="currentColor" stroke-width="1"/></svg>
-          ${agent.commits || 0} commits
-        </div>
-        <div class="agent-card__meta-item">${agent.lastSeen || 'unknown'}</div>
+function renderFeed(){
+  const el=document.getElementById('feedItems');
+  el.innerHTML=feedData.map(f=>`
+    <div class="feed__item">
+      <div class="feed__item-icon feed__item-icon--${f.icon}">${f.icon==='push'?'↗':f.icon==='merge'?'✓':f.icon==='vouch'?'★':'+'}</div>
+      <div class="feed__item-body">
+        <div class="feed__item-text">${f.text}</div>
+        <div class="feed__item-time">${f.time}</div>
       </div>
     </div>
-  `;
+  `).join('');
 }
 
-function renderDetailPanel(agent) {
-  const trustColor = getTrustColor(agent.trust);
-  const delta = agent.trustDelta || 0;
-  const deltaSign = delta >= 0 ? '+' : '';
-  const deltaColor = delta >= 0 ? '#27a644' : '#e5484d';
-  const components = agent.trustComponents || {};
-  const maxComp = Math.max(...Object.values(components), 0.01);
-
-  return `
-    <div class="detail-panel__agent">
-      <div class="detail-panel__avatar">${getInitials(agent.name)}</div>
-      <div class="detail-panel__name">${agent.name}</div>
-      <div class="detail-panel__did">${agent.did || 'N/A'}</div>
-    </div>
-
-    <div class="detail-panel__trust-big">
-      <div class="detail-panel__trust-score" style="color:${trustColor}">${(agent.trust * 100).toFixed(1)}%</div>
-      <div class="detail-panel__trust-label">Trust Score &middot; ${getTrustLabel(agent.trust)}</div>
-      <div class="detail-panel__trust-delta" style="color:${deltaColor}">${deltaSign}${(delta * 100).toFixed(1)}% this period</div>
-    </div>
-
-    <div class="detail-panel__components">
-      <div class="detail-panel__comp-title">Trust Breakdown</div>
-      ${Object.entries(components).map(([key, val]) => `
-        <div class="detail-panel__comp-row">
-          <span class="detail-panel__comp-name">${key.charAt(0).toUpperCase() + key.slice(1)}</span>
-          <div class="detail-panel__comp-bar-wrap">
-            <div class="detail-panel__comp-bar">
-              <div class="detail-panel__comp-fill" style="width:${(val / maxComp) * 100}%;background:${trustColor}"></div>
-            </div>
-            <span class="detail-panel__comp-val">${(val * 100).toFixed(0)}%</span>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-
-    <div class="detail-panel__section">
-      <div class="detail-panel__section-title">Details</div>
-      <div class="detail-panel__info-grid">
-        <div class="detail-panel__info-item">
-          <div class="detail-panel__info-label">Status</div>
-          <div class="detail-panel__info-value">${agent.status}</div>
-        </div>
-        <div class="detail-panel__info-item">
-          <div class="detail-panel__info-label">Operator</div>
-          <div class="detail-panel__info-value">${agent.operator || 'N/A'}</div>
-        </div>
-        <div class="detail-panel__info-item">
-          <div class="detail-panel__info-label">Model</div>
-          <div class="detail-panel__info-value">${agent.model || 'N/A'}</div>
-        </div>
-        <div class="detail-panel__info-item">
-          <div class="detail-panel__info-label">Version</div>
-          <div class="detail-panel__info-value">${agent.version || 'N/A'}</div>
-        </div>
-        <div class="detail-panel__info-item">
-          <div class="detail-panel__info-label">Commits</div>
-          <div class="detail-panel__info-value">${(agent.commits || 0).toLocaleString()}</div>
-        </div>
-        <div class="detail-panel__info-item">
-          <div class="detail-panel__info-label">Merged PRs</div>
-          <div class="detail-panel__info-value">${agent.mergedPRs || 0}</div>
-        </div>
-        <div class="detail-panel__info-item">
-          <div class="detail-panel__info-label">Vouches</div>
-          <div class="detail-panel__info-value">${agent.vouches || 0}</div>
-        </div>
-        <div class="detail-panel__info-item">
-          <div class="detail-panel__info-label">Registered</div>
-          <div class="detail-panel__info-value">${agent.registeredAt || 'N/A'}</div>
-        </div>
+// ── TOP AGENTS ────────────────────────────────────────
+function renderTopAgents(){
+  const sorted=[...agents].sort((a,b)=>b.trust-a.trust).slice(0,8);
+  const el=document.getElementById('topAgentsList');
+  el.innerHTML=sorted.map((a,i)=>`
+    <div class="top-agent" data-id="${a.id}">
+      <span class="top-agent__rank">${i+1}</span>
+      <div class="top-agent__avatar">${getInitials(a.name)}</div>
+      <div class="top-agent__info">
+        <div class="top-agent__name">${a.name}</div>
+        <div class="top-agent__meta">${a.vouches||0} vouches · ${a.commits||0} commits</div>
       </div>
+      <div class="top-agent__trust" style="color:${getTrustColor(a.trust)}">${(a.trust*100).toFixed(0)}%</div>
     </div>
-
-    <div class="detail-panel__section">
-      <div class="detail-panel__section-title">Capabilities</div>
-      <div class="agent-card__tags" style="margin:0">
-        ${(agent.capabilities || []).map(c => `<span class="agent-card__tag">${c}</span>`).join('')}
-      </div>
-    </div>
-
-    ${agent.timeline && agent.timeline.length ? `
-    <div class="detail-panel__timeline">
-      <div class="detail-panel__timeline-title">Recent Activity</div>
-      ${agent.timeline.map((t, i) => `
-        <div class="detail-panel__timeline-item">
-          <div class="detail-panel__timeline-dot"></div>
-          <div class="detail-panel__timeline-line"></div>
-          <div>
-            <div class="detail-panel__timeline-text">${t.text}</div>
-            <div class="detail-panel__timeline-time">${t.ts}</div>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-    ` : ''}
-  `;
+  `).join('');
 }
 
-// ── RENDER ────────────────────────────────────────────
-const grid = document.getElementById('agentsGrid');
-let currentFilter = 'all';
-let currentSearch = '';
+// ── SIDEBAR AGENTS ────────────────────────────────────
+function renderSidebarAgents(){
+  const sorted=[...agents].sort((a,b)=>b.trust-a.trust).slice(0,8);
+  const el=document.getElementById('sidebarAgents');
+  el.innerHTML=sorted.map(a=>{
+    const dotClass=a.status==='active'?'sidebar__agent-dot--active':a.status==='scanning'?'sidebar__agent-dot--scanning':'sidebar__agent-dot--idle';
+    return `<div class="sidebar__agent" data-id="${a.id}"><span class="sidebar__agent-dot ${dotClass}"></span><span class="sidebar__agent-name">${a.name}</span><span class="sidebar__agent-status">${a.status}</span></div>`;
+  }).join('');
+}
 
-function renderAgents() {
-  let filtered = agents;
+// ── AGENTS TABLE ──────────────────────────────────────
+let currentFilter='all';
 
-  if (currentFilter === 'active') filtered = filtered.filter(a => a.status === 'active');
-  else if (currentFilter === 'scanning') filtered = filtered.filter(a => a.status === 'scanning');
-  else if (currentFilter === 'idle') filtered = filtered.filter(a => a.status === 'idle' || a.status === 'standby');
-  else if (currentFilter === 'high-trust') filtered = filtered.filter(a => a.trust >= 0.7);
+function renderTable(){
+  let filtered=agents;
+  if(currentFilter!=='all')filtered=filtered.filter(a=>a.status===currentFilter);
 
-  if (currentSearch) {
-    const q = currentSearch.toLowerCase();
-    filtered = filtered.filter(a =>
-      a.name.toLowerCase().includes(q) ||
-      (a.did || '').toLowerCase().includes(q) ||
-      (a.capabilities || []).some(c => c.toLowerCase().includes(q))
-    );
-  }
-
-  document.getElementById('agentCount').textContent = `${filtered.length} agents`;
-  grid.innerHTML = filtered.map(renderAgentCard).join('');
-
-  // Animate in
-  grid.querySelectorAll('.agent-card').forEach((card, i) => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(8px)';
-    setTimeout(() => {
-      card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-      card.style.opacity = '1';
-      card.style.transform = 'translateY(0)';
-    }, i * 40);
-  });
+  document.getElementById('tableCount').textContent=`${filtered.length} agents`;
+  const el=document.getElementById('agentsTable');
+  el.innerHTML=filtered.map(a=>{
+    const tc=getTrustColor(a.trust);
+    const sc=getStatusClass(a.status);
+    return `<tr data-id="${a.id}">
+      <td><div class="table__agent"><div class="table__avatar">${getInitials(a.name)}</div><div><div class="table__name">${a.name}</div><div class="table__did">${a.didShort||''}</div></div></div></td>
+      <td><span class="table__status ${sc}"><span class="table__status-dot"></span>${a.status}</span></td>
+      <td><div class="table__trust"><div class="table__trust-bar"><div class="table__trust-fill" style="width:${a.trust*100}%;background:${tc}"></div></div><span class="table__trust-val" style="color:${tc}">${(a.trust*100).toFixed(0)}%</span></div></td>
+      <td><div class="table__tags">${(a.capabilities||[]).slice(0,3).map(c=>`<span class="table__tag">${c}</span>`).join('')}</div></td>
+      <td><span class="table__meta">${(a.commits||0).toLocaleString()}</span></td>
+      <td><span class="table__meta">${a.vouches||0}</span></td>
+      <td><span class="table__meta">${a.lastSeen||'N/A'}</span></td>
+    </tr>`;
+  }).join('');
 }
 
 // ── FILTERS ───────────────────────────────────────────
-document.querySelectorAll('.filter').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelector('.filter--active').classList.remove('filter--active');
-    btn.classList.add('filter--active');
-    currentFilter = btn.dataset.filter;
-    renderAgents();
+document.querySelectorAll('.filter-chip').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelector('.filter-chip--active').classList.remove('filter-chip--active');
+    btn.classList.add('filter-chip--active');
+    currentFilter=btn.dataset.filter;
+    renderTable();
   });
 });
 
-// ── SEARCH ────────────────────────────────────────────
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', e => {
-  currentSearch = e.target.value;
-  renderAgents();
-});
-document.addEventListener('keydown', e => {
-  if (e.key === '/' && document.activeElement !== searchInput) {
-    e.preventDefault();
-    searchInput.focus();
-  }
-  if (e.key === 'Escape') {
-    closeDetail();
-    searchInput.blur();
-  }
-});
-
 // ── DETAIL PANEL ──────────────────────────────────────
-const detailPanel = document.getElementById('detailPanel');
-const detailOverlay = document.getElementById('detailOverlay');
-const detailContent = document.getElementById('detailContent');
+const detailPanel=document.getElementById('detailPanel');
+const detailOverlay=document.getElementById('detailOverlay');
+const detailContent=document.getElementById('detailContent');
 
-function openDetail(agentId) {
-  const agent = agents.find(a => a.id === agentId);
-  if (!agent) return;
-  detailContent.innerHTML = renderDetailPanel(agent);
+function openDetail(id){
+  const a=agents.find(x=>x.id===id);
+  if(!a)return;
+  const tc=getTrustColor(a.trust);
+  const delta=a.trustDelta||0;
+  const ds=delta>=0?'+':'';
+  const dc=delta>=0?'#27a644':'#e5484d';
+  const comps=a.trustComponents||{};
+  const maxC=Math.max(...Object.values(comps),0.01);
+  const sc=getStatusClass(a.status);
+
+  detailContent.innerHTML=`
+    <div class="detail__agent">
+      <div class="detail__avatar">${getInitials(a.name)}</div>
+      <div class="detail__agent-info">
+        <div class="detail__name">${a.name}</div>
+        <div class="detail__did">${a.did||'N/A'}</div>
+        <div class="detail__status-badge table__status ${sc}"><span class="table__status-dot"></span>${a.status}</div>
+      </div>
+    </div>
+    <div class="detail__trust-card">
+      <div class="detail__trust-score" style="color:${tc}">${(a.trust*100).toFixed(1)}%</div>
+      <div class="detail__trust-label">Trust Score</div>
+      <div class="detail__trust-delta" style="color:${dc}">${ds}${(delta*100).toFixed(1)}% this period</div>
+    </div>
+    <div class="detail__breakdown">
+      <div class="detail__breakdown-title">Trust Breakdown</div>
+      ${Object.entries(comps).map(([k,v])=>`
+        <div class="detail__comp">
+          <span class="detail__comp-name">${k.charAt(0).toUpperCase()+k.slice(1)}</span>
+          <div class="detail__comp-bar"><div class="detail__comp-fill" style="width:${(v/maxC)*100}%;background:${tc}"></div></div>
+          <span class="detail__comp-val">${(v*100).toFixed(0)}%</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="detail__grid">
+      <div class="detail__grid-title">Details</div>
+      <div class="detail__grid-items">
+        <div class="detail__grid-item"><div class="detail__grid-label">Operator</div><div class="detail__grid-value">${a.operator||'N/A'}</div></div>
+        <div class="detail__grid-item"><div class="detail__grid-label">Model</div><div class="detail__grid-value">${a.model||'N/A'}</div></div>
+        <div class="detail__grid-item"><div class="detail__grid-label">Version</div><div class="detail__grid-value">${a.version||'N/A'}</div></div>
+        <div class="detail__grid-item"><div class="detail__grid-label">Registered</div><div class="detail__grid-value">${a.registeredAt||'N/A'}</div></div>
+        <div class="detail__grid-item"><div class="detail__grid-label">Commits</div><div class="detail__grid-value">${(a.commits||0).toLocaleString()}</div></div>
+        <div class="detail__grid-item"><div class="detail__grid-label">Merged PRs</div><div class="detail__grid-value">${a.mergedPRs||0}</div></div>
+        <div class="detail__grid-item"><div class="detail__grid-label">Vouches</div><div class="detail__grid-value">${a.vouches||0}</div></div>
+        <div class="detail__grid-item"><div class="detail__grid-label">Last Seen</div><div class="detail__grid-value">${a.lastSeen||'N/A'}</div></div>
+      </div>
+    </div>
+    <div class="detail__caps">
+      <div class="detail__caps-title">Capabilities</div>
+      <div class="detail__caps-list">${(a.capabilities||[]).map(c=>`<span class="detail__cap">${c}</span>`).join('')}</div>
+    </div>
+    ${a.timeline&&a.timeline.length?`
+    <div class="detail__timeline">
+      <div class="detail__timeline-title">Recent Activity</div>
+      ${a.timeline.map(t=>`
+        <div class="detail__tl-item">
+          <div class="detail__tl-dot"></div>
+          <div class="detail__tl-line"></div>
+          <div><div class="detail__tl-text">${t.text}</div><div class="detail__tl-time">${t.ts}</div></div>
+        </div>
+      `).join('')}
+    </div>` : ''}
+  `;
   detailPanel.classList.add('open');
   detailOverlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow='hidden';
 }
 
-function closeDetail() {
+function closeDetail(){
   detailPanel.classList.remove('open');
   detailOverlay.classList.remove('open');
-  document.body.style.overflow = '';
+  document.body.style.overflow='';
 }
 
-document.getElementById('detailClose').addEventListener('click', closeDetail);
-detailOverlay.addEventListener('click', closeDetail);
+document.getElementById('detailClose').addEventListener('click',closeDetail);
+detailOverlay.addEventListener('click',closeDetail);
 
-grid.addEventListener('click', e => {
-  const card = e.target.closest('.agent-card');
-  if (card) openDetail(card.dataset.agentId);
+// Click handlers for table, top agents, sidebar
+document.getElementById('agentsTable').addEventListener('click',e=>{const r=e.target.closest('tr');if(r)openDetail(r.dataset.id)});
+document.getElementById('topAgentsList').addEventListener('click',e=>{const r=e.target.closest('.top-agent');if(r)openDetail(r.dataset.id)});
+document.getElementById('sidebarAgents').addEventListener('click',e=>{const r=e.target.closest('.sidebar__agent');if(r)openDetail(r.dataset.id)});
+
+// ── COMMAND PALETTE ───────────────────────────────────
+const cmdPalette=document.getElementById('cmdPalette');
+const cmdInput=document.getElementById('cmdInput');
+const cmdResults=document.getElementById('cmdResults');
+
+function openCmd(){cmdPalette.classList.add('open');cmdInput.value='';cmdInput.focus();renderCmdResults('')}
+function closeCmd(){cmdPalette.classList.remove('open')}
+function renderCmdResults(q){
+  const filtered=agents.filter(a=>a.name.toLowerCase().includes(q.toLowerCase())||(a.did||'').toLowerCase().includes(q.toLowerCase())).slice(0,10);
+  cmdResults.innerHTML=filtered.map(a=>`
+    <div class="cmd-palette__item" data-id="${a.id}">
+      <div class="cmd-palette__item-icon">${getInitials(a.name)}</div>
+      <div style="flex:1"><div class="cmd-palette__item-name">${a.name}</div></div>
+      <div class="cmd-palette__item-meta">${(a.trust*100).toFixed(0)}% trust</div>
+    </div>
+  `).join('');
+}
+cmdInput.addEventListener('input',e=>renderCmdResults(e.target.value));
+cmdResults.addEventListener('click',e=>{const i=e.target.closest('.cmd-palette__item');if(i){closeCmd();openDetail(i.dataset.id)}});
+document.getElementById('cmdBackdrop').addEventListener('click',closeCmd);
+
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openCmd()}
+  if(e.key==='Escape'){closeCmd();closeDetail()}
 });
 
+// ── NETWORK CANVAS ────────────────────────────────────
+function initNetworkViz(){
+  const canvas=document.getElementById('networkCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const rect=canvas.getBoundingClientRect();
+  canvas.width=rect.width*dpr;
+  canvas.height=rect.height*dpr;
+  ctx.scale(dpr,dpr);
+  const W=rect.width,H=rect.height;
+
+  // Nodes
+  const nodes=[];
+  // Central hub
+  nodes.push({x:W/2,y:H/2,r:8,color:'#5e6ad2',type:'hub',vx:0,vy:0});
+  // Satellite nodes
+  for(let i=0;i<3;i++){
+    const angle=(i/3)*Math.PI*2-Math.PI/2;
+    const r=70;
+    nodes.push({x:W/2+Math.cos(angle)*r,y:H/2+Math.sin(angle)*r,r:5,color:'#5e6ad2',type:'node',vx:0,vy:0,angle,baseR:r});
+  }
+  // Agent nodes
+  for(let i=0;i<30;i++){
+    const angle=Math.random()*Math.PI*2;
+    const r=90+Math.random()*80;
+    const colors=['#27a644','#27a644','#27a644','#e5a500','#e5a500','#5e6ad2'];
+    nodes.push({x:W/2+Math.cos(angle)*r,y:H/2+Math.sin(angle)*r,r:2+Math.random()*2,color:colors[Math.floor(Math.random()*colors.length)],type:'agent',vx:(Math.random()-0.5)*0.2,vy:(Math.random()-0.5)*0.2,angle,baseR:r});
+  }
+
+  // Edges
+  const edges=[];
+  for(let i=1;i<4;i++)edges.push([0,i]);
+  for(let i=4;i<nodes.length;i++){
+    const parent=Math.random()<0.5?Math.floor(1+Math.random()*3):Math.floor(Math.random()*i);
+    edges.push([parent,i]);
+  }
+
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    t+=0.005;
+
+    // Animate nodes
+    nodes.forEach((n,i)=>{
+      if(i>0){
+        n.x=W/2+Math.cos(n.angle+t*(i%3===0?1:-0.5))*n.baseR+Math.sin(t*2+i)*3;
+        n.y=H/2+Math.sin(n.angle+t*(i%3===0?1:-0.5))*n.baseR+Math.cos(t*1.5+i)*3;
+      }
+    });
+
+    // Draw edges
+    edges.forEach(([a,b])=>{
+      ctx.beginPath();
+      ctx.moveTo(nodes[a].x,nodes[a].y);
+      ctx.lineTo(nodes[b].x,nodes[b].y);
+      ctx.strokeStyle='rgba(94,106,210,0.08)';
+      ctx.lineWidth=0.5;
+      ctx.stroke();
+    });
+
+    // Draw nodes
+    nodes.forEach(n=>{
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=n.color+(n.type==='hub'?'40':n.type==='node'?'30':'15');
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r*0.5,0,Math.PI*2);
+      ctx.fillStyle=n.color;
+      ctx.globalAlpha=n.type==='hub'?0.8:n.type==='node'?0.6:0.4;
+      ctx.fill();
+      ctx.globalAlpha=1;
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
 // ── INIT ──────────────────────────────────────────────
-renderAgents();
+renderFeed();
+renderTopAgents();
+renderSidebarAgents();
+renderTable();
+initNetworkViz();
 </script>
 </body>
 </html>
