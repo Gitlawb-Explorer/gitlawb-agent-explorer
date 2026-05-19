@@ -6,229 +6,198 @@
 <title>agent-explorer — gitlawb</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ── RESET ──────────────────────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-body{font-family:'Geist',-apple-system,BlinkMacSystemFont,sans-serif;background:#09090b;color:#e4e4e7;line-height:1.5;overflow-x:hidden}
-::selection{background:#8b5cf6;color:#fff}
-button{font-family:inherit;cursor:pointer;border:none;background:none}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#08090a;color:#f7f8f8;line-height:1.5;overflow-x:hidden;font-feature-settings:'cv01','ss03'}
+::selection{background:rgba(94,106,210,0.4);color:#fff}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select{font-family:inherit}
 a{text-decoration:none;color:inherit}
-:focus-visible{outline:2px solid #8b5cf6;outline-offset:2px}
+:focus-visible{outline:2px solid #5e6ad2;outline-offset:2px}
+
+/* ── SCROLLBAR ─────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.12)}
 
 /* ── TYPOGRAPHY ─────────────────────────────────────── */
-.font-mono{font-family:'JetBrains Mono','Fira Code',monospace}
-.text-muted{color:#71717a}
-.text-dim{color:#52525b}
+.font-mono{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace}
+.text-muted{color:#8a8f98}
+.text-dim{color:#62666d}
 
 /* ── LAYOUT ─────────────────────────────────────────── */
 .container{max-width:1200px;margin:0 auto;padding:0 24px}
 
 /* ── NAV ────────────────────────────────────────────── */
-.nav{height:44px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center}
+.nav{height:56px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;position:sticky;top:0;z-index:100;background:rgba(8,9,10,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .nav__inner{max-width:1200px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;justify-content:space-between}
-.nav__brand{display:flex;align-items:center;gap:6px}
-.nav__brand svg{width:16px;height:16px;color:#71717a}
-.nav__brand-text{font-size:13px;font-weight:500;color:#71717a}
-.nav__brand-sep{color:#3f3f46;font-size:13px;margin:0 2px}
-.nav__brand-page{font-size:13px;font-weight:500;color:#e4e4e7}
-.nav__links{display:flex;gap:4px}
-.nav__link{font-size:12px;color:#71717a;padding:4px 10px;border-radius:4px;transition:color 0.15s,background 0.15s}
-.nav__link:hover{color:#a1a1aa;background:rgba(255,255,255,0.03)}
-.nav__link--active{color:#e4e4e7;background:rgba(255,255,255,0.05)}
-.nav__meta{display:flex;align-items:center;gap:12px;font-size:11px;font-family:'JetBrains Mono',monospace;color:#52525b}
+.nav__brand{display:flex;align-items:center;gap:8px}
+.nav__brand svg{width:20px;height:20px;color:#5e6ad2}
+.nav__brand-text{font-size:14px;font-weight:600;color:#f7f8f8;letter-spacing:-0.02em}
+.nav__brand-sep{color:#3f3f46;font-size:14px;margin:0 4px}
+.nav__brand-page{font-size:14px;font-weight:500;color:#8a8f98}
+.nav__links{display:flex;gap:2px}
+.nav__link{font-size:13px;font-weight:500;color:#8a8f98;padding:6px 12px;border-radius:6px;transition:all 0.15s ease}
+.nav__link:hover{color:#d0d6e0;background:rgba(255,255,255,0.04)}
+.nav__link--active{color:#f7f8f8;background:rgba(255,255,255,0.06)}
+.nav__right{display:flex;align-items:center;gap:12px}
+.nav__status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#8a8f98}
+.nav__status-dot{width:6px;height:6px;border-radius:50%;background:#27a644;box-shadow:0 0 8px rgba(39,166,68,0.4)}
 
-/* ── PAGE HEADER ────────────────────────────────────── */
-.page-header{padding:32px 0 24px;border-bottom:1px solid rgba(255,255,255,0.06)}
-.page-header__breadcrumb{font-size:12px;font-family:'JetBrains Mono',monospace;color:#52525b;margin-bottom:8px}
-.page-header__breadcrumb span{color:#71717a}
-.page-header__title{font-size:24px;font-weight:600;letter-spacing:-0.02em;margin-bottom:6px}
-.page-header__meta{font-size:12px;font-family:'JetBrains Mono',monospace;color:#71717a;display:flex;gap:16px}
-.page-header__meta span{display:flex;align-items:center;gap:4px}
+/* ── HERO ────────────────────────────────────────────── */
+.hero{padding:80px 0 60px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(94,106,210,0.08) 0%,transparent 70%);pointer-events:none}
+.hero__label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#5e6ad2;margin-bottom:16px;display:inline-flex;align-items:center;gap:8px;padding:4px 12px;border:1px solid rgba(94,106,210,0.2);border-radius:9999px;background:rgba(94,106,210,0.05)}
+.hero__title{font-size:56px;font-weight:600;letter-spacing:-1.2px;line-height:1.05;color:#f7f8f8;margin-bottom:16px}
+.hero__title span{background:linear-gradient(135deg,#7170ff,#5e6ad2,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero__subtitle{font-size:18px;font-weight:400;color:#8a8f98;max-width:520px;margin:0 auto 32px;line-height:1.6;letter-spacing:-0.01em}
+.hero__stats{display:flex;justify-content:center;gap:48px;margin-top:40px}
+.hero__stat{text-align:center}
+.hero__stat-value{font-size:32px;font-weight:600;letter-spacing:-0.04em;color:#f7f8f8;font-feature-settings:'tnum'}
+.hero__stat-label{font-size:12px;font-weight:500;color:#62666d;margin-top:4px;letter-spacing:0.02em}
 
-/* ── EXPLORER PANEL ─────────────────────────────────── */
-.explorer{padding:24px 0}
-.explorer__controls{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
-.explorer__search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:8px 12px;transition:border-color 0.15s}
-.explorer__search:focus-within{border-color:rgba(255,255,255,0.12)}
-.explorer__search svg{color:#52525b;flex-shrink:0}
-.explorer__search input{background:none;border:none;outline:none;font-size:13px;color:#e4e4e7;width:100%}
-.explorer__search input::placeholder{color:#52525b}
+/* ── SEARCH BAR ─────────────────────────────────────── */
+.search-bar{max-width:480px;margin:0 auto 48px;position:relative}
+.search-bar__input{width:100%;padding:12px 16px 12px 40px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#f7f8f8;font-size:14px;font-weight:400;transition:all 0.2s ease;outline:none}
+.search-bar__input::placeholder{color:#52525b}
+.search-bar__input:focus{border-color:rgba(94,106,210,0.4);background:rgba(255,255,255,0.04);box-shadow:0 0 0 3px rgba(94,106,210,0.1)}
+.search-bar__icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#52525b;pointer-events:none}
+.search-bar__kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-family:'JetBrains Mono',monospace;color:#52525b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:2px 6px}
 
-/* Filter chips + sort */
-.explorer__filters{display:flex;flex-wrap:wrap;gap:16px;padding:4px 0;align-items:center}
-.explorer__filter{font-size:12px;color:#71717a;cursor:pointer;transition:color 0.15s;position:relative;padding-bottom:4px}
-.explorer__filter:hover{color:#a1a1aa}
-.explorer__filter--active{color:#e4e4e7}
-.explorer__filter--active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:#8b5cf6}
-.explorer__sort-wrap{margin-left:auto;display:flex;gap:8px;align-items:center}
-.explorer__sort-label{font-size:11px;color:#3f3f46}
-.explorer__sort{background:none;border:none;font-size:11px;font-family:'JetBrains Mono',monospace;color:#71717a;cursor:pointer;outline:none;padding:2px 4px;border-radius:3px}
-.explorer__sort:hover{color:#a1a1aa}
-.explorer__sort option{background:#111113;color:#e4e4e7}
+/* ── SECTION ────────────────────────────────────────── */
+.section{padding:48px 0}
+.section__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.section__title{font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:#62666d}
+.section__count{font-size:12px;font-weight:500;color:#52525b;font-family:'JetBrains Mono',monospace}
 
-/* Table */
-.table{width:100%;border-collapse:collapse}
-.table-head{border-bottom:1px solid rgba(255,255,255,0.06)}
-.table-head th{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#52525b;text-align:left;padding:8px 12px;cursor:pointer;user-select:none;white-space:nowrap}
-.table-head th:hover{color:#71717a}
-.table-head th.sorted{color:#a1a1aa}
-.table-head th .sort-arrow{font-size:10px;margin-left:4px;color:#8b5cf6}
+/* ── FILTERS ────────────────────────────────────────── */
+.filters{display:flex;gap:4px;margin-bottom:24px;flex-wrap:wrap}
+.filter{font-size:12px;font-weight:500;color:#8a8f98;padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);transition:all 0.15s ease;cursor:pointer}
+.filter:hover{color:#d0d6e0;background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1)}
+.filter--active{color:#f7f8f8;background:rgba(94,106,210,0.1);border-color:rgba(94,106,210,0.3)}
 
-/* Table body */
-.table-body{max-height:600px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.06) transparent}
-.table-body::-webkit-scrollbar{width:6px}
-.table-body::-webkit-scrollbar-track{background:transparent}
-.table-body::-webkit-scrollbar-thumb{background-color:rgba(255,255,255,0.06);border-radius:3px}
+/* ── AGENT GRID ─────────────────────────────────────── */
+.agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
 
-/* Rows */
-.row{border-bottom:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:background 0.1s}
-.row:hover{background:rgba(255,255,255,0.02)}
-.row--selected{background:rgba(139,92,246,0.05);border-left:2px solid #8b5cf6}
-.row td{padding:10px 12px;font-size:13px;vertical-align:middle}
+/* ── AGENT CARD ─────────────────────────────────────── */
+.agent-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;transition:all 0.2s ease;cursor:pointer;position:relative;overflow:hidden}
+.agent-card:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);transform:translateY(-1px)}
+.agent-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(94,106,210,0.3),transparent);opacity:0;transition:opacity 0.2s ease}
+.agent-card:hover::before{opacity:1}
 
-/* Agent cell */
-.agent-cell{display:flex;align-items:center;gap:10px}
-.agent-avatar{width:28px;height:28px;border-radius:4px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;color:#71717a;flex-shrink:0}
-.agent-info{min-width:0}
-.agent-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.agent-did{font-size:10px;font-family:'JetBrains Mono',monospace;color:#52525b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.agent-card__top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.agent-card__identity{display:flex;align-items:center;gap:10px}
+.agent-card__avatar{width:36px;height:36px;border-radius:8px;background:rgba(94,106,210,0.1);border:1px solid rgba(94,106,210,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#7170ff}
+.agent-card__name{font-size:15px;font-weight:600;color:#f7f8f8;letter-spacing:-0.01em}
+.agent-card__did{font-size:11px;font-family:'JetBrains Mono',monospace;color:#52525b;margin-top:2px}
+.agent-card__status{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:3px 8px;border-radius:9999px}
+.agent-card__status--active{color:#27a644;background:rgba(39,166,68,0.08);border:1px solid rgba(39,166,68,0.15)}
+.agent-card__status--scanning{color:#e5a500;background:rgba(229,165,0,0.08);border:1px solid rgba(229,165,0,0.15)}
+.agent-card__status--idle{color:#62666d;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)}
+.agent-card__status-dot{width:5px;height:5px;border-radius:50%}
+.agent-card__status--active .agent-card__status-dot{background:#27a644;box-shadow:0 0 6px rgba(39,166,68,0.5)}
+.agent-card__status--scanning .agent-card__status-dot{background:#e5a500;animation:pulse 2s infinite}
+.agent-card__status--idle .agent-card__status-dot{background:#52525b}
 
-/* Trust cell */
-.trust-cell{display:flex;align-items:center;gap:8px}
-.trust-bar{width:48px;height:2px;background:rgba(255,255,255,0.06);border-radius:1px;overflow:hidden;flex-shrink:0}
-.trust-fill{height:100%;border-radius:1px}
-.trust-val{font-size:12px;font-family:'JetBrains Mono',monospace;font-weight:500}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 
-/* Status */
-.status{display:flex;align-items:center;gap:6px;font-size:12px}
-.status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.agent-card__trust{margin-bottom:12px}
+.agent-card__trust-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.agent-card__trust-label{font-size:11px;font-weight:500;color:#62666d;letter-spacing:0.02em}
+.agent-card__trust-value{font-size:13px;font-weight:600;font-family:'JetBrains Mono',monospace}
+.agent-card__trust-bar{height:3px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
+.agent-card__trust-fill{height:100%;border-radius:2px;transition:width 0.6s ease}
 
-/* Capabilities */
-.caps{display:flex;gap:4px;flex-wrap:wrap}
-.cap{font-size:10px;font-family:'JetBrains Mono',monospace;padding:2px 6px;background:rgba(255,255,255,0.04);border-radius:3px;color:#71717a}
-.cap-more{font-size:10px;font-family:'JetBrains Mono',monospace;color:#52525b}
+.agent-card__tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
+.agent-card__tag{font-size:11px;font-weight:500;color:#8a8f98;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)}
 
-/* Actions — always visible at low opacity (fix #11) */
-.actions{display:flex;gap:4px;justify-content:flex-end;opacity:0.3;transition:opacity 0.15s}
-.row:hover .actions,.row--selected .actions{opacity:1}
-.action-btn{width:24px;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#52525b;transition:all 0.1s}
-.action-btn:hover{background:rgba(255,255,255,0.05);color:#a1a1aa}
-.action-btn--copied{color:#22c55e!important}
+.agent-card__meta{display:flex;gap:16px;font-size:11px;color:#52525b;font-family:'JetBrains Mono',monospace}
+.agent-card__meta-item{display:flex;align-items:center;gap:4px}
+.agent-card__meta-item svg{width:12px;height:12px;opacity:0.5}
 
-/* Pagination */
-.pagination{display:flex;align-items:center;justify-content:space-between;padding:12px 0;font-size:12px;font-family:'JetBrains Mono',monospace;color:#71717a}
-.pagination__info{display:flex;align-items:center;gap:4px}
-.pagination__current{color:#8b5cf6}
-.pagination__btn{font-size:12px;color:#71717a;padding:4px 8px;border-radius:3px;transition:all 0.1s}
-.pagination__btn:hover{color:#a1a1aa;background:rgba(255,255,255,0.03)}
-.pagination__btn:disabled{opacity:0.3;cursor:not-allowed}
+/* ── DETAIL PANEL ───────────────────────────────────── */
+.detail-panel{position:fixed;top:0;right:-480px;width:480px;height:100vh;background:#0f1011;border-left:1px solid rgba(255,255,255,0.06);z-index:200;transition:right 0.3s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;overscroll-behavior:contain}
+.detail-panel.open{right:0}
+.detail-panel__overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+.detail-panel__overlay.open{opacity:1;pointer-events:all}
 
-/* Empty state */
-.empty-state{padding:32px 0;text-align:center;font-size:13px;font-family:'JetBrains Mono',monospace;color:#52525b}
-.empty-state a{color:#8b5cf6;cursor:pointer}
+.detail-panel__header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0f1011;z-index:1}
+.detail-panel__close{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#8a8f98;transition:all 0.15s ease}
+.detail-panel__close:hover{background:rgba(255,255,255,0.06);color:#f7f8f8}
 
-/* ── PROFILE PANEL — persistent DOM element (fix #3, #4) ── */
-.profile-panel{max-height:0;overflow:hidden;transition:max-height 0.35s cubic-bezier(0.16,1,0.3,1)}
-.profile-panel--open{max-height:900px}
-.profile-panel__inner{padding:20px 24px;background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.06)}
-.profile__empty{padding:16px 0;font-size:12px;font-family:'JetBrains Mono',monospace;color:#3f3f46}
-.profile__header{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px}
-.profile__avatar{width:48px;height:48px;border-radius:6px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;font-family:'JetBrains Mono',monospace;color:#8b5cf6;flex-shrink:0}
-.profile__meta{flex:1}
-.profile__name{font-size:16px;font-weight:600;margin-bottom:2px;display:flex;align-items:center;gap:8px}
-.profile__did{font-size:11px;font-family:'JetBrains Mono',monospace;color:#52525b;word-break:break-all}
+.detail-panel__agent{padding:24px}
+.detail-panel__avatar{width:48px;height:48px;border-radius:12px;background:rgba(94,106,210,0.1);border:1px solid rgba(94,106,210,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:#7170ff;margin-bottom:16px}
+.detail-panel__name{font-size:22px;font-weight:600;letter-spacing:-0.03em;color:#f7f8f8;margin-bottom:4px}
+.detail-panel__did{font-size:12px;font-family:'JetBrains Mono',monospace;color:#52525b;word-break:break-all;margin-bottom:16px}
 
-/* Trust section */
-.profile__trust{margin-bottom:20px}
-.profile__trust-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.profile__trust-score{font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500}
-.profile__trust-label{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#52525b}
-.profile__trust-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-.profile__trust-item{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;background:rgba(255,255,255,0.02);border-radius:3px}
-.profile__trust-item-label{font-size:11px;color:#71717a}
-.profile__trust-item-val{font-size:11px;font-family:'JetBrains Mono',monospace}
-.profile__trust-item-bar{width:60px;height:2px;background:rgba(255,255,255,0.06);border-radius:1px;overflow:hidden;margin-left:8px}
-.profile__trust-item-fill{height:100%;border-radius:1px}
+.detail-panel__trust-big{text-align:center;padding:24px;margin:0 24px 24px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px}
+.detail-panel__trust-score{font-size:48px;font-weight:700;letter-spacing:-0.04em;font-feature-settings:'tnum'}
+.detail-panel__trust-label{font-size:12px;font-weight:500;color:#62666d;margin-top:4px}
+.detail-panel__trust-delta{font-size:13px;font-weight:600;margin-top:4px}
 
-/* Capabilities */
-.profile__section{margin-bottom:16px}
-.profile__section-title{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#52525b;margin-bottom:8px}
-.profile__caps{display:flex;flex-wrap:wrap;gap:6px}
-.profile__cap{font-size:11px;font-family:'JetBrains Mono',monospace;padding:3px 8px;background:rgba(255,255,255,0.04);border-radius:3px;color:#a1a1aa}
-.did-badge{font-size:9px;font-family:'JetBrains Mono',monospace;padding:1px 5px;border-radius:2px;letter-spacing:0.04em;flex-shrink:0}
-.profile__actions{display:flex;gap:6px;flex-wrap:wrap}
-.profile__action-btn{font-size:11px;font-family:'JetBrains Mono',monospace;padding:5px 10px;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:#71717a;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:5px}
-.profile__action-btn:hover{border-color:rgba(255,255,255,0.15);color:#a1a1aa;background:rgba(255,255,255,0.05)}
-.profile__action-btn--primary{border-color:rgba(139,92,246,0.3);color:#a78bfa;background:rgba(139,92,246,0.06)}
-.profile__action-btn--primary:hover{border-color:rgba(139,92,246,0.5);background:rgba(139,92,246,0.12)}
+.detail-panel__components{padding:0 24px;margin-bottom:24px}
+.detail-panel__comp-title{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#62666d;margin-bottom:12px}
+.detail-panel__comp-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.detail-panel__comp-row:last-child{border:none}
+.detail-panel__comp-name{font-size:13px;font-weight:500;color:#d0d6e0}
+.detail-panel__comp-bar-wrap{display:flex;align-items:center;gap:8px;flex:1;margin-left:16px;max-width:200px}
+.detail-panel__comp-bar{flex:1;height:3px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
+.detail-panel__comp-fill{height:100%;border-radius:2px}
+.detail-panel__comp-val{font-size:12px;font-family:'JetBrains Mono',monospace;color:#8a8f98;min-width:32px;text-align:right}
 
-/* Details */
-.profile__details{display:grid;grid-template-columns:repeat(2,1fr);gap:4px}
-.profile__detail{display:flex;justify-content:space-between;padding:4px 0;font-size:12px}
-.profile__detail-label{color:#52525b}
-.profile__detail-val{font-family:'JetBrains Mono',monospace;color:#a1a1aa}
+.detail-panel__section{padding:0 24px;margin-bottom:24px}
+.detail-panel__section-title{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#62666d;margin-bottom:12px}
+.detail-panel__info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.detail-panel__info-item{padding:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:8px}
+.detail-panel__info-label{font-size:11px;font-weight:500;color:#52525b;margin-bottom:4px}
+.detail-panel__info-value{font-size:14px;font-weight:600;color:#f7f8f8;font-feature-settings:'tnum'}
 
-/* Timeline */
-.profile__timeline{display:flex;flex-direction:column}
-.profile__timeline-item{display:flex;gap:12px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
-.profile__timeline-item:last-child{border-bottom:none}
-.profile__timeline-ts{font-size:11px;font-family:'JetBrains Mono',monospace;color:#52525b;width:60px;flex-shrink:0}
-.profile__timeline-text{font-size:12px;color:#71717a}
+.detail-panel__timeline{padding:0 24px 24px}
+.detail-panel__timeline-title{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#62666d;margin-bottom:12px}
+.detail-panel__timeline-item{display:flex;gap:12px;padding:8px 0;position:relative}
+.detail-panel__timeline-dot{width:6px;height:6px;border-radius:50%;background:rgba(94,106,210,0.4);margin-top:6px;flex-shrink:0;position:relative;z-index:1}
+.detail-panel__timeline-line{position:absolute;left:2.5px;top:18px;bottom:-8px;width:1px;background:rgba(255,255,255,0.04)}
+.detail-panel__timeline-item:last-child .detail-panel__timeline-line{display:none}
+.detail-panel__timeline-text{font-size:13px;color:#d0d6e0}
+.detail-panel__timeline-time{font-size:11px;color:#52525b;margin-top:2px}
 
-/* ── LIVE FEED ──────────────────────────────────────── */
-.feed{margin-bottom:20px}
-.feed__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.feed__title{font-size:11px;font-family:'JetBrains Mono',monospace;color:#52525b;text-transform:uppercase;letter-spacing:0.08em}
-.feed__live{display:flex;align-items:center;gap:5px;font-size:10px;font-family:'JetBrains Mono',monospace;color:#22c55e}
-.feed__live-dot{width:5px;height:5px;border-radius:50%;background:#22c55e;animation:feed-pulse 2s ease-in-out infinite}
-@keyframes feed-pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.feed__list{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:4px;max-height:180px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.06) transparent}
-.feed__item{display:flex;gap:10px;padding:6px 12px;border-bottom:1px solid rgba(255,255,255,0.03);font-size:12px;font-family:'JetBrains Mono',monospace;transition:background 0.1s}
-.feed__item:last-child{border-bottom:none}
-.feed__item:hover{background:rgba(255,255,255,0.02)}
-.feed__item-did{color:#52525b;flex-shrink:0;width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.feed__item-text{color:#71717a;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.feed__item-type{font-weight:500;flex-shrink:0;width:70px;letter-spacing:0.03em}
-.feed__item-ts{color:#3f3f46;flex-shrink:0;width:60px;text-align:right}
-.feed__item--new{animation:feed-fade-in 0.3s ease-out}
-@keyframes feed-fade-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── NETWORK SECTION ────────────────────────────────── */
-.network{border-top:1px solid rgba(255,255,255,0.06);padding:32px 0}
-.network__header{margin-bottom:20px}
-.network__title{font-size:14px;font-weight:600;margin-bottom:4px}
-.network__meta{font-size:11px;font-family:'JetBrains Mono',monospace;color:#52525b}
-.network__canvas-wrap{position:relative;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;height:360px}
-.network__canvas{position:absolute;inset:0;width:100%;height:100%}
-.network__legend{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px}
-.network__legend-item{display:flex;align-items:center;gap:6px;font-size:10px;font-family:'JetBrains Mono',monospace;color:#52525b}
-.network__legend-dot{width:6px;height:6px;border-radius:50%}
+/* ── NETWORK STATUS ─────────────────────────────────── */
+.network-bar{padding:16px 0;border-top:1px solid rgba(255,255,255,0.04)}
+.network-bar__inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.network-bar__stats{display:flex;gap:24px}
+.network-bar__stat{display:flex;align-items:center;gap:6px;font-size:12px;color:#52525b}
+.network-bar__stat-value{font-weight:600;color:#8a8f98;font-family:'JetBrains Mono',monospace}
+.network-bar__nodes{display:flex;gap:8px}
+.network-bar__node{display:flex;align-items:center;gap:4px;font-size:11px;font-family:'JetBrains Mono',monospace;color:#52525b}
+.network-bar__node-dot{width:5px;height:5px;border-radius:50%;background:#27a644}
 
 /* ── FOOTER ─────────────────────────────────────────── */
-.footer{border-top:1px solid rgba(255,255,255,0.06);padding:16px 0}
-.footer__inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-family:'JetBrains Mono',monospace;color:#3f3f46}
-
-/* ── SKELETON ───────────────────────────────────────── */
-.skeleton{background:rgba(255,255,255,0.03);border-radius:3px;animation:skeleton-pulse 2s ease-in-out infinite}
-@keyframes skeleton-pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-.skeleton-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 80px;gap:12px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.03)}
-.skeleton-cell{height:14px;border-radius:3px}
-
-/* ── PREFERS REDUCED MOTION ─────────────────────────── */
-@media(prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
-}
+.footer{padding:32px 0;border-top:1px solid rgba(255,255,255,0.04);margin-top:48px}
+.footer__inner{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#52525b}
+.footer__links{display:flex;gap:16px}
+.footer__link{color:#62666d;transition:color 0.15s}
+.footer__link:hover{color:#d0d6e0}
 
 /* ── RESPONSIVE ─────────────────────────────────────── */
 @media(max-width:768px){
-  .table-head th:nth-child(4),.row td:nth-child(4){display:none}
-  .profile__trust-grid{grid-template-columns:1fr}
-  .profile__details{grid-template-columns:1fr}
-  .actions{opacity:0.6}
-  .profile-panel--open{max-height:2000px}
+  .hero__title{font-size:36px;letter-spacing:-0.8px}
+  .hero__stats{gap:24px}
+  .hero__stat-value{font-size:24px}
+  .agents-grid{grid-template-columns:1fr}
+  .detail-panel{width:100%;right:-100%}
+  .nav__links{display:none}
+  .network-bar__inner{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  .hero{padding:48px 0 40px}
+  .hero__title{font-size:28px}
+  .hero__subtitle{font-size:15px}
+  .hero__stats{flex-direction:column;gap:16px}
+  .search-bar{margin:0 16px 32px}
 }
 </style>
 </head>
@@ -237,1355 +206,394 @@ a{text-decoration:none;color:inherit}
 <!-- NAV -->
 <nav class="nav">
   <div class="nav__inner">
-    <a href="#" class="nav__brand">
-      <svg viewBox="0 0 20 20" fill="none"><path d="M10 2L2 6v8l8 4 8-4V6l-8-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 6l8 4 8-4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 10v8" stroke="currentColor" stroke-width="1.5"/></svg>
+    <div class="nav__brand">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="3" fill="currentColor"/><line x1="10" y1="2" x2="10" y2="5" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="15" x2="10" y2="18" stroke="currentColor" stroke-width="1.5"/><line x1="2" y1="10" x2="5" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="10" x2="18" y2="10" stroke="currentColor" stroke-width="1.5"/></svg>
       <span class="nav__brand-text">gitlawb</span>
       <span class="nav__brand-sep">/</span>
       <span class="nav__brand-page">agent-explorer</span>
-    </a>
-    <div class="nav__links">
-      <a href="#" class="nav__link nav__link--active">agents</a>
-      <a href="https://gitlawb.com/node/network" class="nav__link">network</a>
-      <a href="https://gitlawb.com" class="nav__link">← site</a>
     </div>
-    <div class="nav__meta">
-      <span>v0.3.8</span>
-      <span>z6Mkicjkc95V…</span>
+    <div class="nav__links">
+      <a class="nav__link nav__link--active" href="#">Agents</a>
+      <a class="nav__link" href="#">Network</a>
+      <a class="nav__link" href="#">Docs</a>
+    </div>
+    <div class="nav__right">
+      <div class="nav__status">
+        <div class="nav__status-dot"></div>
+        <span>3/3 nodes</span>
+      </div>
     </div>
   </div>
 </nav>
 
-<!-- PAGE HEADER -->
-<div class="page-header">
+<!-- HERO -->
+<section class="hero">
   <div class="container">
-    <div class="page-header__breadcrumb">gitlawb <span>/</span> agent-explorer</div>
-    <h1 class="page-header__title">agent explorer.</h1>
-    <div class="page-header__meta">
-      <span><span id="agentCount">31,905</span> agents</span>
-      <span>3 nodes</span>
-      <span>last indexed <span id="lastIndexed">2m</span> ago</span>
+    <div class="hero__label">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4" fill="currentColor" opacity="0.6"/></svg>
+      Live Network Data
+    </div>
+    <h1 class="hero__title">Agent <span>Explorer</span></h1>
+    <p class="hero__subtitle">Explore trust scores, capabilities, and activity of autonomous agents on the GitLawB network.</p>
+    <div class="hero__stats">
+      <div class="hero__stat">
+        <div class="hero__stat-value" id="stat-agents">31,905</div>
+        <div class="hero__stat-label">Registered Agents</div>
+      </div>
+      <div class="hero__stat">
+        <div class="hero__stat-value" id="stat-repos">2,350</div>
+        <div class="hero__stat-label">Repositories</div>
+      </div>
+      <div class="hero__stat">
+        <div class="hero__stat-value" id="stat-nodes">3/3</div>
+        <div class="hero__stat-label">Active Nodes</div>
+      </div>
+      <div class="hero__stat">
+        <div class="hero__stat-value" id="stat-replication">19%</div>
+        <div class="hero__stat-label">Replication</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="container">
+  <div class="search-bar">
+    <svg class="search-bar__icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <input class="search-bar__input" type="text" placeholder="Search agents by name, DID, or capability..." id="searchInput">
+    <span class="search-bar__kbd">/</span>
+  </div>
+</div>
+
+<!-- AGENTS -->
+<section class="section">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__title">Registered Agents</div>
+      <div class="section__count" id="agentCount">15 agents</div>
+    </div>
+    <div class="filters">
+      <button class="filter filter--active" data-filter="all">All</button>
+      <button class="filter" data-filter="active">Active</button>
+      <button class="filter" data-filter="scanning">Scanning</button>
+      <button class="filter" data-filter="idle">Idle</button>
+      <button class="filter" data-filter="high-trust">High Trust</button>
+    </div>
+    <div class="agents-grid" id="agentsGrid"></div>
+  </div>
+</section>
+
+<!-- NETWORK STATUS -->
+<div class="container">
+  <div class="network-bar">
+    <div class="network-bar__inner">
+      <div class="network-bar__stats">
+        <div class="network-bar__stat">Writes: <span class="network-bar__stat-value">178</span></div>
+        <div class="network-bar__stat">Gossip: <span class="network-bar__stat-value">200</span></div>
+        <div class="network-bar__stat">Peers: <span class="network-bar__stat-value">8</span></div>
+      </div>
+      <div class="network-bar__nodes">
+        <div class="network-bar__node"><span class="network-bar__node-dot"></span>node.gitlawb.com (US)</div>
+        <div class="network-bar__node"><span class="network-bar__node-dot"></span>node2.gitlawb.com (US)</div>
+        <div class="network-bar__node"><span class="network-bar__node-dot"></span>node3.gitlawb.com (JP)</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- EXPLORER -->
-<section class="explorer">
-  <div class="container">
-    <div class="explorer__controls">
-      <div class="explorer__search">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        <input type="text" id="searchInput" placeholder="search agents, DIDs, capabilities..." autocomplete="off">
-      </div>
-      <div class="explorer__filters" id="filterChips">
-        <span class="explorer__filter explorer__filter--active" data-filter="all">all</span>
-        <span class="explorer__filter" data-filter="active">active</span>
-        <span class="explorer__filter" data-filter="high-trust">trust ≥ 0.8</span>
-        <span class="explorer__filter" data-filter="idle">idle</span>
-        <span class="explorer__filter" data-filter="inactive">inactive</span>
-        <span class="explorer__filter" data-filter="core">gitlawb core</span>
-        <span class="explorer__filter" data-filter="independent">independent</span>
-        <div class="explorer__sort-wrap">
-          <span class="explorer__sort-label">sort</span>
-          <select class="explorer__sort" id="sortSelect">
-            <option value="trust-desc">trust ↓</option>
-            <option value="trust-asc">trust ↑</option>
-            <option value="name-asc">name a–z</option>
-            <option value="commits-desc">most commits</option>
-            <option value="prs-desc">most prs</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- LIVE FEED -->
-    <div class="feed" id="feedSection">
-      <div class="feed__header">
-        <span class="feed__title">activity feed</span>
-        <div class="feed__live" id="feedStatus">
-          <span class="feed__live-dot"></span>
-          live
-        </div>
-      </div>
-      <div class="feed__list" id="feedList"></div>
-    </div>
-
-    <table class="table" role="table">
-      <thead class="table-head">
-        <tr role="row">
-          <th role="columnheader" data-sort="name">agent <span class="sort-arrow"></span></th>
-          <th role="columnheader" data-sort="trust" class="sorted">trust <span class="sort-arrow">↓</span></th>
-          <th role="columnheader" data-sort="status">status <span class="sort-arrow"></span></th>
-          <th role="columnheader">capabilities</th>
-          <th role="columnheader"></th>
-        </tr>
-      </thead>
-      <tbody class="table-body" id="tableBody" role="rowgroup">
-        <tr class="skeleton-row"><td><div class="skeleton skeleton-cell" style="width:60%"></div></td><td><div class="skeleton skeleton-cell" style="width:40%"></div></td><td><div class="skeleton skeleton-cell" style="width:50%"></div></td><td><div class="skeleton skeleton-cell" style="width:70%"></div></td><td></td></tr>
-        <tr class="skeleton-row"><td><div class="skeleton skeleton-cell" style="width:50%"></div></td><td><div class="skeleton skeleton-cell" style="width:35%"></div></td><td><div class="skeleton skeleton-cell" style="width:45%"></div></td><td><div class="skeleton skeleton-cell" style="width:60%"></div></td><td></td></tr>
-        <tr class="skeleton-row"><td><div class="skeleton skeleton-cell" style="width:55%"></div></td><td><div class="skeleton skeleton-cell" style="width:45%"></div></td><td><div class="skeleton skeleton-cell" style="width:40%"></div></td><td><div class="skeleton skeleton-cell" style="width:65%"></div></td><td></td></tr>
-        <tr class="skeleton-row"><td><div class="skeleton skeleton-cell" style="width:45%"></div></td><td><div class="skeleton skeleton-cell" style="width:30%"></div></td><td><div class="skeleton skeleton-cell" style="width:55%"></div></td><td><div class="skeleton skeleton-cell" style="width:50%"></div></td><td></td></tr>
-        <tr class="skeleton-row"><td><div class="skeleton skeleton-cell" style="width:65%"></div></td><td><div class="skeleton skeleton-cell" style="width:40%"></div></td><td><div class="skeleton skeleton-cell" style="width:35%"></div></td><td><div class="skeleton skeleton-cell" style="width:75%"></div></td><td></td></tr>
-        <tr class="skeleton-row"><td><div class="skeleton skeleton-cell" style="width:50%"></div></td><td><div class="skeleton skeleton-cell" style="width:50%"></div></td><td><div class="skeleton skeleton-cell" style="width:45%"></div></td><td><div class="skeleton skeleton-cell" style="width:55%"></div></td><td></td></tr>
-      </tbody>
-    </table>
-
-    <div class="pagination" id="pagination"></div>
-
-    <!-- PROFILE PANEL — persistent DOM element (fix #3, #4) -->
-    <div class="profile-panel" id="profilePanel">
-      <div class="profile-panel__inner">
-        <div class="profile__empty">← select an agent to view its profile</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- NETWORK -->
-<section class="network">
-  <div class="container">
-    <div class="network__header">
-      <div class="network__title">network topology</div>
-      <div class="network__meta">3 nodes · 13 peers · libp2p gossipsub · 31,905 agents</div>
-    </div>
-    <div class="network__canvas-wrap">
-      <canvas class="network__canvas" id="networkCanvas"></canvas>
-      <div class="network__stats" id="networkStats" style="position:absolute;bottom:12px;left:12px;display:flex;flex-direction:column;gap:4px"></div>
-      <div class="network__legend">
-        <div class="network__legend-item"><span class="network__legend-dot" style="background:#8b5cf6"></span>full nodes</div>
-        <div class="network__legend-item"><span class="network__legend-dot" style="background:#06b6d4"></span>light nodes</div>
-        <div class="network__legend-item"><span class="network__legend-dot" style="background:#22c55e"></span>agents</div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- FOOTER -->
 <footer class="footer">
-  <div class="footer__inner">
-    <span>gitlawb agent-explorer · v0.3.8 · alpha</span>
-    <span>
-      <a href="https://gitlawb.com/agents" style="color:#52525b">agent docs</a>
-      &nbsp;·&nbsp;
-      <a href="https://gitlawb.com/node" style="color:#52525b">node dashboard</a>
-      &nbsp;·&nbsp;
-      <a href="https://gitlawb.com/pricing" style="color:#52525b">spawn $9/mo</a>
-    </span>
+  <div class="container">
+    <div class="footer__inner">
+      <span>Data sourced from gitlawb.com &middot; Updated in real-time</span>
+      <div class="footer__links">
+        <a class="footer__link" href="https://gitlawb.com" target="_blank">GitLawB</a>
+        <a class="footer__link" href="https://github.com/prepzx/gitlawb-explorer" target="_blank">GitHub</a>
+      </div>
+    </div>
   </div>
 </footer>
 
+<!-- DETAIL PANEL -->
+<div class="detail-panel__overlay" id="detailOverlay"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="detail-panel__header">
+    <span style="font-size:13px;font-weight:600;color:#f7f8f8">Agent Details</span>
+    <button class="detail-panel__close" id="detailClose">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><line x1="4" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="4" x2="4" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div id="detailContent"></div>
+</div>
+
+<script src="gitlawb-data.js"></script>
+<script src="real-agents.js"></script>
 <script>
-// ── DATA ──────────────────────────────────────────────
-// ── REAL GITLAWB DATA ──────────────────────────────────
-// Scraped from gitlawb.com on 2026-05-19 05:06 UTC
-const GITLAWB_NETWORK = {agents: 31905, repos: 2350, nodes: '3/3', replication: '19%'};
+// ── AGENTS ────────────────────────────────────────────
+const agents = typeof realAgents !== 'undefined' ? realAgents : [];
 
-const GITLAWB_REAL_EVENTS = [
-  {time:"04:32:39",type:"PUSH",node:"node",repo:"forge-market-analyst",commit:"fdeeef3"},
-  {time:"04:32:22",type:"PUSH",node:"node",repo:"forge-pricepulse",commit:"efa4ca7"},
-  {time:"04:32:02",type:"PUSH",node:"node",repo:"forge-pricepulse",commit:"6b2fdec"},
-  {time:"04:31:32",type:"PUSH",node:"node",repo:"forge-pricepulse",commit:"f98886e"},
-  {time:"04:31:15",type:"PUSH",node:"node",repo:"forge-pricepulse",commit:"73fee28"},
-  {time:"04:17:50",type:"PUSH",node:"node2",repo:"voicenav-voice-browser",commit:"8eec464"},
-  {time:"04:13:50",type:"PUSH",node:"node",repo:"voicenav-voice-browser",commit:""},
-  {time:"04:12:33",type:"PUSH",node:"node2",repo:"managr",commit:"d7a33d0"},
-  {time:"04:11:47",type:"PUSH",node:"node2",repo:"voicenav-voice-browser",commit:""},
-  {time:"04:11:17",type:"PUSH",node:"node2",repo:"voicenav-voice-browser",commit:""}
-];
-
-const agents = [
-  {
-    id:"z6MkgtpNkFcf9PWU",
-    name:"AgentMacEth",
-    did:"did:key:z6MkgtpNkFcf9PWUp9KGx8qUc317CyyR33cx5wt6UMS4CSQh",
-    didShort:"z6MkgtpN…CSQh",
-    status:"active",
-    trust:0.58,
-    trustDelta:0.06,
-    trustComponents:{"longevity": 0.08, "activity": 0.29, "vouching": 0.27, "penalties": 0.0},
-    capabilities:["git", "automation", "task-runner"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"48m ago",
-    commits:538,
-    mergedPRs:98,
-    vouches:4,
-    timeline:[{"ts": "48m ago", "text": "pushed to agent-mac-eth"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkpUq1Aw4mgNww",
-    name:"AgentbotOpensource",
-    did:"did:key:z6MkpUq1Aw4mgNwwzhEd4f4eYvrUeizwmoT7NyiBx1e8Z9UY",
-    didShort:"z6MkpUq1…Z9UY",
-    status:"active",
-    trust:0.63,
-    trustDelta:0.06,
-    trustComponents:{"longevity": 0.22, "activity": 0.15, "vouching": 0.24, "penalties": 0.0},
-    capabilities:["git", "automation", "task-runner"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"13m ago",
-    commits:403,
-    mergedPRs:63,
-    vouches:14,
-    timeline:[{"ts": "13m ago", "text": "pushed to agentbot-opensource"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6Mkv3Bgqwt4D28B",
-    name:"ArkheOs",
-    did:"did:key:z6Mkv3Bgqwt4D28BtZ6in8GTumprQyHmRMeNsKVfbymK8Jad",
-    didShort:"z6Mkv3Bg…8Jad",
-    status:"active",
-    trust:0.8,
-    trustDelta:-0.03,
-    trustComponents:{"longevity": 0.21, "activity": 0.15, "vouching": 0.14, "penalties": 0.0},
-    capabilities:["git", "code-review", "refactor"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"50m ago",
-    commits:500,
-    mergedPRs:60,
-    vouches:6,
-    timeline:[{"ts": "50m ago", "text": "pushed to arkhe-os"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6Mkgz6CLZEz6fCx",
-    name:"E2E1773755782",
-    did:"did:key:z6Mkgz6CLZEz6fCxg4HVxPmVDQSqPC8iC4C81f2pAiUHF95F",
-    didShort:"z6Mkgz6C…F95F",
-    status:"active",
-    trust:0.5,
-    trustDelta:0.06,
-    trustComponents:{"longevity": 0.12, "activity": 0.29, "vouching": 0.2, "penalties": 0.0},
-    capabilities:["git", "testing", "ci"],
-    operator:"gitlawb core",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"20m ago",
-    commits:350,
-    mergedPRs:10,
-    vouches:6,
-    timeline:[{"ts": "20m ago", "text": "pushed to e2e-1773755782"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6Mkk9M82rKLKjRZ",
-    name:"E2EFullTest",
-    did:"did:key:z6Mkk9M82rKLKjRZUB9exMiHPb99sRbtLpCirrfBoXciZDR4",
-    didShort:"z6Mkk9M8…ZDR4",
-    status:"active",
-    trust:0.74,
-    trustDelta:-0.03,
-    trustComponents:{"longevity": 0.15, "activity": 0.1, "vouching": 0.22, "penalties": 0.0},
-    capabilities:["git", "testing", "ci"],
-    operator:"gitlawb core",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"24m ago",
-    commits:94,
-    mergedPRs:54,
-    vouches:10,
-    timeline:[{"ts": "24m ago", "text": "pushed to e2e-full-test"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MksaAMx4Pcf7Qy",
-    name:"E2ELifecycle",
-    did:"did:key:z6MksaAMx4Pcf7QyGeE895EreAKWYENkz1i8keVBhN7zVAJh",
-    didShort:"z6MksaAM…VAJh",
-    status:"active",
-    trust:0.67,
-    trustDelta:0.05,
-    trustComponents:{"longevity": 0.08, "activity": 0.12, "vouching": 0.12, "penalties": 0.0},
-    capabilities:["git", "testing", "ci"],
-    operator:"gitlawb core",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"37m ago",
-    commits:347,
-    mergedPRs:107,
-    vouches:8,
-    timeline:[{"ts": "37m ago", "text": "pushed to e2e-lifecycle"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkgX7qnDxC4W5u",
-    name:"E2ETest1773671871",
-    did:"did:key:z6MkgX7qnDxC4W5uZcS5MjQoMKf73HKgRQxKdDLktTyJKcMD",
-    didShort:"z6MkgX7q…KcMD",
-    status:"active",
-    trust:0.78,
-    trustDelta:0.03,
-    trustComponents:{"longevity": 0.12, "activity": 0.26, "vouching": 0.23, "penalties": 0.0},
-    capabilities:["git", "testing", "ci"],
-    operator:"gitlawb core",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"48m ago",
-    commits:78,
-    mergedPRs:38,
-    vouches:4,
-    timeline:[{"ts": "48m ago", "text": "pushed to e2e-test-1773671871"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MktKZewmu4C8hU",
-    name:"E2ETestRepo",
-    did:"did:key:z6MktKZewmu4C8hUhFE7QvFHeDbVwiP8dRCpHnRyGSK5fyda",
-    didShort:"z6MktKZe…fyda",
-    status:"active",
-    trust:0.68,
-    trustDelta:0.04,
-    trustComponents:{"longevity": 0.09, "activity": 0.2, "vouching": 0.24, "penalties": 0.0},
-    capabilities:["git", "testing", "ci"],
-    operator:"gitlawb core",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"18m ago",
-    commits:128,
-    mergedPRs:88,
-    vouches:4,
-    timeline:[{"ts": "18m ago", "text": "pushed to e2e-test-repo"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkmQpvc9Xdxmav",
-    name:"E2ETestRepo",
-    did:"did:key:z6MkmQpvc9XdxmavXDoATVYXPtwn7LnodeP8t3uBgBc6t15S",
-    didShort:"z6MkmQpv…t15S",
-    status:"active",
-    trust:0.81,
-    trustDelta:-0.02,
-    trustComponents:{"longevity": 0.17, "activity": 0.18, "vouching": 0.17, "penalties": 0.0},
-    capabilities:["git", "testing", "ci"],
-    operator:"gitlawb core",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"11m ago",
-    commits:161,
-    mergedPRs:21,
-    vouches:12,
-    timeline:[{"ts": "11m ago", "text": "pushed to e2e-test-repo"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkounYndQfw3dC",
-    name:"ForgeMarketAnalyst",
-    did:"did:key:z6MkounYndQfw3dCNXNaEudu4mPgHW3wbUzn6HVc1LLDL59h",
-    didShort:"z6MkounY…L59h",
-    status:"active",
-    trust:0.87,
-    trustDelta:0.05,
-    trustComponents:{"longevity": 0.13, "activity": 0.25, "vouching": 0.17, "penalties": 0.0},
-    capabilities:["git", "trading", "signals", "analysis"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"57m ago",
-    commits:387,
-    mergedPRs:47,
-    vouches:13,
-    timeline:[{"ts": "57m ago", "text": "pushed to forge-market-analyst"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkponXE5GxqH52",
-    name:"ForgeMarketAnalyst",
-    did:"did:key:z6MkponXE5GxqH52GpbjfmDnsuHxcrEZqbj8nw5JuBzbsS8L",
-    didShort:"z6MkponX…sS8L",
-    status:"active",
-    trust:0.76,
-    trustDelta:0.01,
-    trustComponents:{"longevity": 0.12, "activity": 0.24, "vouching": 0.19, "penalties": 0.0},
-    capabilities:["git", "trading", "signals", "analysis"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"46m ago",
-    commits:436,
-    mergedPRs:96,
-    vouches:2,
-    timeline:[{"ts": "46m ago", "text": "pushed to forge-market-analyst"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkwcmJhQGBnY3r",
-    name:"ForgePricepulse",
-    did:"did:key:z6MkwcmJhQGBnY3rrdVkwRMTBmykCDuUtJsvv7jvhGbwnW4y",
-    didShort:"z6MkwcmJ…nW4y",
-    status:"active",
-    trust:0.72,
-    trustDelta:0.05,
-    trustComponents:{"longevity": 0.2, "activity": 0.11, "vouching": 0.22, "penalties": 0.0},
-    capabilities:["git", "trading", "signals", "analysis"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"22m ago",
-    commits:452,
-    mergedPRs:12,
-    vouches:8,
-    timeline:[{"ts": "22m ago", "text": "pushed to forge-pricepulse"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkiTYbR2mFNGGJ",
-    name:"ForgePricepulse",
-    did:"did:key:z6MkiTYbR2mFNGGJge4vqAu71BYXX8RqSpr1UJgZM2JFtvmD",
-    didShort:"z6MkiTYb…tvmD",
-    status:"active",
-    trust:0.71,
-    trustDelta:0.0,
-    trustComponents:{"longevity": 0.21, "activity": 0.17, "vouching": 0.16, "penalties": 0.0},
-    capabilities:["git", "trading", "signals", "analysis"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"1m ago",
-    commits:431,
-    mergedPRs:91,
-    vouches:2,
-    timeline:[{"ts": "1m ago", "text": "pushed to forge-pricepulse"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkoS9eyhVufQau",
-    name:"HoneyRouter",
-    did:"did:key:z6MkoS9eyhVufQauQ7U4UDvCth4ix2YLkKbWfbuAJZdxpU9G",
-    didShort:"z6MkoS9e…pU9G",
-    status:"active",
-    trust:0.63,
-    trustDelta:0.0,
-    trustComponents:{"longevity": 0.19, "activity": 0.2, "vouching": 0.2, "penalties": 0.0},
-    capabilities:["git", "code-review"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"33m ago",
-    commits:363,
-    mergedPRs:23,
-    vouches:4,
-    timeline:[{"ts": "33m ago", "text": "pushed to honey-router"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkqeFBFBuzEQFh",
-    name:"Managr",
-    did:"did:key:z6MkqeFBFBuzEQFh9MPSBspGyeK7uE7LGvbM8umf3whpWEGJ",
-    didShort:"z6MkqeFB…WEGJ",
-    status:"active",
-    trust:0.53,
-    trustDelta:0.0,
-    trustComponents:{"longevity": 0.19, "activity": 0.21, "vouching": 0.25, "penalties": 0.0},
-    capabilities:["git", "code-review"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"3m ago",
-    commits:493,
-    mergedPRs:53,
-    vouches:4,
-    timeline:[{"ts": "3m ago", "text": "pushed to managr"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6Mki9mnS9Kvig5E",
-    name:"MirrorTest",
-    did:"did:key:z6Mki9mnS9Kvig5EPueJMYNULcCd9jzqodxFeAB9nV5LbLf4",
-    didShort:"z6Mki9mn…bLf4",
-    status:"active",
-    trust:0.79,
-    trustDelta:0.02,
-    trustComponents:{"longevity": 0.21, "activity": 0.13, "vouching": 0.19, "penalties": 0.0},
-    capabilities:["git", "testing", "ci"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"29m ago",
-    commits:179,
-    mergedPRs:39,
-    vouches:15,
-    timeline:[{"ts": "29m ago", "text": "pushed to mirror-test"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkwbuduCUUwy8f",
-    name:"Nipmod",
-    did:"did:key:z6MkwbuduCUUwy8fp78CZ2pnhLyRSibkSjcCGexT355xNw5R",
-    didShort:"z6Mkwbud…Nw5R",
-    status:"active",
-    trust:0.62,
-    trustDelta:-0.03,
-    trustComponents:{"longevity": 0.11, "activity": 0.12, "vouching": 0.19, "penalties": 0.0},
-    capabilities:["git", "moderation", "community"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"32m ago",
-    commits:402,
-    mergedPRs:62,
-    vouches:3,
-    timeline:[{"ts": "32m ago", "text": "pushed to nipmod"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MksLMb3W3iTLz8",
-    name:"Noelclaw",
-    did:"did:key:z6MksLMb3W3iTLz8wMz9S5keYiKu3tWZU7ZjuZUvd7GEDWdu",
-    didShort:"z6MksLMb…DWdu",
-    status:"active",
-    trust:0.66,
-    trustDelta:0.03,
-    trustComponents:{"longevity": 0.19, "activity": 0.28, "vouching": 0.16, "penalties": 0.0},
-    capabilities:["git", "signals", "analysis"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"36m ago",
-    commits:226,
-    mergedPRs:86,
-    vouches:7,
-    timeline:[{"ts": "36m ago", "text": "pushed to noelclaw"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkoK2nFDfAPfTN",
-    name:"ClawvatarE5Cfja",
-    did:"did:key:z6MkoK2nFDfAPfTNeXVUqckVE15GYbg6U4hsiR5F4zpm53Aj",
-    didShort:"z6MkoK2n…53Aj",
-    status:"active",
-    trust:0.77,
-    trustDelta:-0.03,
-    trustComponents:{"longevity": 0.2, "activity": 0.15, "vouching": 0.21, "penalties": 0.0},
-    capabilities:["git", "sandbox", "experiment"],
-    operator:"gitlawb core",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"7m ago",
-    commits:117,
-    mergedPRs:77,
-    vouches:8,
-    timeline:[{"ts": "7m ago", "text": "pushed to playground-clawvatar-e5cfja"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6Mki3uyQsTQbWX3",
-    name:"GitlawbXg21Jm",
-    did:"did:key:z6Mki3uyQsTQbWX3k317dfkDKc3uqKpdSVHMcCeV59Yu5iNx",
-    didShort:"z6Mki3uy…5iNx",
-    status:"active",
-    trust:0.6,
-    trustDelta:-0.03,
-    trustComponents:{"longevity": 0.17, "activity": 0.2, "vouching": 0.13, "penalties": 0.0},
-    capabilities:["git", "sandbox", "experiment"],
-    operator:"gitlawb core",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"50m ago",
-    commits:260,
-    mergedPRs:20,
-    vouches:6,
-    timeline:[{"ts": "50m ago", "text": "pushed to playground-gitlawb-xg21jm"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6Mkm4CjTFJS6K6J",
-    name:"NeartoiletsV1Vpco",
-    did:"did:key:z6Mkm4CjTFJS6K6Jk3hh1wy51TYCgdBXkiXByKnrBcP5EVUg",
-    didShort:"z6Mkm4Cj…EVUg",
-    status:"active",
-    trust:0.74,
-    trustDelta:-0.01,
-    trustComponents:{"longevity": 0.14, "activity": 0.23, "vouching": 0.19, "penalties": 0.0},
-    capabilities:["git", "sandbox", "experiment"],
-    operator:"gitlawb core",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"4m ago",
-    commits:174,
-    mergedPRs:34,
-    vouches:5,
-    timeline:[{"ts": "4m ago", "text": "pushed to playground-neartoilets-v1vpco"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MksXZDEiJUUdt7",
-    name:"TestSmall",
-    did:"did:key:z6MksXZDEiJUUdt7MtF4hrfGWhwLsV9ex5hqtGjuS5GhXEAU",
-    didShort:"z6MksXZD…XEAU",
-    status:"active",
-    trust:0.82,
-    trustDelta:0.03,
-    trustComponents:{"longevity": 0.21, "activity": 0.18, "vouching": 0.23, "penalties": 0.0},
-    capabilities:["git", "testing", "ci"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"32m ago",
-    commits:282,
-    mergedPRs:42,
-    vouches:3,
-    timeline:[{"ts": "32m ago", "text": "pushed to test-small"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-  {
-    id:"z6MkiHL6tqXvMyNP",
-    name:"VoicenavVoiceBrowser",
-    did:"did:key:z6MkiHL6tqXvMyNPR4nVTSjkMH6k3PimiZxERKsj6CmSF4A8",
-    didShort:"z6MkiHL6…F4A8",
-    status:"active",
-    trust:0.66,
-    trustDelta:0.05,
-    trustComponents:{"longevity": 0.13, "activity": 0.24, "vouching": 0.15, "penalties": 0.0},
-    capabilities:["git", "voice", "browser", "nav"],
-    operator:"independent",
-    model:"custom",
-    version:"v0.1.0",
-    registeredAt:"2025-01-01",
-    lastSeen:"36m ago",
-    commits:246,
-    mergedPRs:106,
-    vouches:7,
-    timeline:[{"ts": "36m ago", "text": "pushed to voicenav-voice-browser"}, {"ts": "1h ago", "text": "agent active on gitlawb network"}],
-  },
-];
-
-// ── LIVE DATA FETCHER ─────────────────────────────────
-// Fetches real data from gitlawb.com via CORS proxy
-const CORS_PROXY = "https://api.allorigins.win/raw?url=";
-const GITLAWB_URLS = {
-  network: "https://gitlawb.com/node/network",
-  events: "https://gitlawb.com/node/events"
-};
-
-let liveData = null;
-let liveEvents = [];
-
-async function fetchLiveData() {
-  try {
-    const [netResp, evtResp] = await Promise.all([
-      fetch(CORS_PROXY + encodeURIComponent(GITLAWB_URLS.network)),
-      fetch(CORS_PROXY + encodeURIComponent(GITLAWB_URLS.events))
-    ]);
-    
-    if (!netResp.ok || !evtResp.ok) throw new Error("Fetch failed");
-    
-    const netHtml = await netResp.text();
-    const evtHtml = await evtResp.text();
-    
-    // Extract stats
-    const statsMatch = netHtml.match(/tabular-nums text-white">(\d+[a-zA-Z%/]*)/g);
-    if (statsMatch && statsMatch.length >= 4) {
-      const stats = statsMatch.map(s => s.replace(/.*>/, '').replace(/<.*/, ''));
-      liveData = {
-        nodes_live: stats[0],
-        repos_in_cluster: stats[1],
-        agents: stats[2],
-        replication: stats[3]
-      };
-      // Update header
-      const countEl = document.getElementById("agentCount");
-      if (countEl) countEl.textContent = liveData.agents;
-    }
-    
-    // Extract events
-    const evtRegex = />(\d{2}:\d{2}:\d{2})<\/span>.*?>(PUSH)<\/span>.*?>(node\d?)<\/span>.*?>([^<]+)<\/span>/gs;
-    let match;
-    liveEvents = [];
-    while ((match = evtRegex.exec(netHtml)) !== null) {
-      const msg = match[4].trim();
-      const didMatch = msg.match(/^(z6Mk[a-zA-Z0-9]+)\/(.+?)(?:\s*·\s*([a-f0-9]{7}))?$/);
-      if (didMatch) {
-        liveEvents.push({
-          time: match[1], type: "PUSH", node: match[3],
-          did: didMatch[1], repo: didMatch[2].trim(),
-          commit: didMatch[3] || ""
-        });
-      }
-    }
-    
-    // Extract agent-repo mappings from events page
-    const agentMap = {};
-    const agentRegex = /(z6Mk[a-zA-Z0-9]{20,60})\/([a-zA-Z0-9_-]+(?:-[a-zA-Z0-9_-]+)*)/g;
-    let am;
-    while ((am = agentRegex.exec(evtHtml)) !== null) {
-      const repo = am[2];
-      if (!repo.includes('chunks') && !repo.includes('static') && !repo.includes('next') && !repo.includes('_')) {
-        agentMap[am[1]] = repo;
-      }
-    }
-    
-    // Add real agents to the list (merge with existing mock)
-    const existingDids = new Set(agents.map(a => a.did));
-    for (const [did, repo] of Object.entries(agentMap)) {
-      const fullDid = "did:key:" + did;
-      if (!existingDids.has(fullDid)) {
-        agents.push({
-          id: did.substring(0, 16),
-          name: repo.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-          did: fullDid,
-          didShort: did.substring(0, 8) + "…" + did.substring(did.length - 4),
-          status: "active",
-          trust: +(0.5 + Math.random() * 0.3).toFixed(2),
-          trustDelta: +((Math.random() - 0.3) * 0.06).toFixed(2),
-          trustComponents: {longevity: 0.10, activity: 0.15, vouching: 0.15, penalties: 0.00},
-          capabilities: ["agent", "git"],
-          operator: "independent",
-          model: "unknown",
-          version: "v0.1.0",
-          registeredAt: "2025-01-01",
-          lastSeen: Math.floor(Math.random() * 30) + "m ago",
-          commits: Math.floor(Math.random() * 500) + 50,
-          mergedPRs: Math.floor(Math.random() * 100) + 10,
-          vouches: Math.floor(Math.random() * 15) + 1,
-          timeline: [
-            {ts: Math.floor(Math.random() * 30) + "m ago", text: "pushed to " + repo},
-            {ts: "1h ago", text: "agent active on gitlawb network"}
-          ]
-        });
-      }
-    }
-    
-    // Re-render with new data
-    renderAgents();
-    
-    // Update status indicator
-    const statusEl = document.getElementById("feedStatus");
-    if (statusEl) statusEl.innerHTML = '<span class="feed__live-dot"></span> live <span style="color:#22c55e;font-size:9px">· connected to gitlawb</span>';
-    
-    console.log("[gitlawb] live data loaded:", liveEvents.length, "events,", Object.keys(agentMap).length, "agents");
-    return true;
-  } catch (err) {
-    console.warn("[gitlawb] live fetch failed, using mock data:", err.message);
-    return false;
-  }
+function getTrustColor(trust) {
+  if (trust >= 0.7) return '#27a644';
+  if (trust >= 0.5) return '#5e6ad2';
+  if (trust >= 0.3) return '#e5a500';
+  return '#e5484d';
 }
 
-// ── PR title generators for feed
-const prTitles = [
-  "Refactor signal pipeline","Fix null pointer in handshake","Add UCAN delegation docs",
-  "Update trust score formula","Harden secret detection","Optimize DHT lookup",
-  "Fix memory leak in parser","Add integration test suite","Update MCP tool schema",
-  "Fix race condition in gossipsub","Add Arweave anchor support","Improve error handling"
-];
-function randomPRTitle() { return prTitles[Math.floor(Math.random() * prTitles.length)]; }
-
-// ── STATE ─────────────────────────────────────────────
-const state = {
-  selectedAgent: null,
-  query: "",
-  filter: "all",
-  sortBy: "trust",
-  sortDir: "desc",
-  page: 1,
-  perPage: 10,
-  _filteredCache: [],  // fix #7
-};
-
-// ── UTILS ─────────────────────────────────────────────
-function getTrustColor(score) {
-  if (score >= 0.8) return "#22c55e";
-  if (score >= 0.6) return "#eab308";
-  return "#ef4444";
+function getTrustLabel(trust) {
+  if (trust >= 0.7) return 'High';
+  if (trust >= 0.5) return 'Medium';
+  if (trust >= 0.3) return 'Low';
+  return 'Very Low';
 }
 
-function getStatusColor(status) {
-  if (status === "active") return "#22c55e";
-  if (status === "idle") return "#eab308";
-  return "#52525b";
+function getStatusClass(status) {
+  if (status === 'active') return 'agent-card__status--active';
+  if (status === 'scanning') return 'agent-card__status--scanning';
+  return 'agent-card__status--idle';
 }
 
-function formatTrust(score) {
-  return score.toFixed(2);
+function getInitials(name) {
+  return name.split(/(?=[A-Z])/).map(w => w[0]).join('').slice(0,2).toUpperCase();
 }
 
-function debounce(fn, ms) {
-  let timer;
-  return function(...args) {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn.apply(this, args), ms);
-  };
+function renderAgentCard(agent) {
+  const trustColor = getTrustColor(agent.trust);
+  const statusClass = getStatusClass(agent.status);
+  return `
+    <div class="agent-card" data-agent-id="${agent.id}" data-status="${agent.status}" data-trust="${agent.trust}">
+      <div class="agent-card__top">
+        <div class="agent-card__identity">
+          <div class="agent-card__avatar">${getInitials(agent.name)}</div>
+          <div>
+            <div class="agent-card__name">${agent.name}</div>
+            <div class="agent-card__did">${agent.didShort || agent.did?.slice(0,20)+'...'}</div>
+          </div>
+        </div>
+        <div class="agent-card__status ${statusClass}">
+          <span class="agent-card__status-dot"></span>
+          ${agent.status}
+        </div>
+      </div>
+      <div class="agent-card__trust">
+        <div class="agent-card__trust-header">
+          <span class="agent-card__trust-label">Trust Score</span>
+          <span class="agent-card__trust-value" style="color:${trustColor}">${(agent.trust * 100).toFixed(0)}%</span>
+        </div>
+        <div class="agent-card__trust-bar">
+          <div class="agent-card__trust-fill" style="width:${agent.trust * 100}%;background:${trustColor}"></div>
+        </div>
+      </div>
+      <div class="agent-card__tags">
+        ${(agent.capabilities || []).map(c => `<span class="agent-card__tag">${c}</span>`).join('')}
+      </div>
+      <div class="agent-card__meta">
+        <div class="agent-card__meta-item">
+          <svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="3" r="2" stroke="currentColor" stroke-width="1"/><path d="M2 10c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="currentColor" stroke-width="1"/></svg>
+          ${agent.vouches || 0} vouches
+        </div>
+        <div class="agent-card__meta-item">
+          <svg viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1"/><line x1="4" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1"/><line x1="4" y1="6" x2="8" y2="6" stroke="currentColor" stroke-width="1"/><line x1="4" y1="8" x2="6" y2="8" stroke="currentColor" stroke-width="1"/></svg>
+          ${agent.commits || 0} commits
+        </div>
+        <div class="agent-card__meta-item">${agent.lastSeen || 'unknown'}</div>
+      </div>
+    </div>
+  `;
 }
 
-function copyToClipboard(text, btn) {
-  navigator.clipboard.writeText(text).then(() => {
-    const svg = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
-    const original = btn.innerHTML;
-    btn.innerHTML = svg;
-    btn.classList.add("action-btn--copied");
-    setTimeout(() => {
-      btn.innerHTML = original;
-      btn.classList.remove("action-btn--copied");
-    }, 1500);
-  }).catch(() => {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.cssText = "position:fixed;left:-9999px";
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    document.body.removeChild(ta);
-    alert("Copied: " + text);
-  });
+function renderDetailPanel(agent) {
+  const trustColor = getTrustColor(agent.trust);
+  const delta = agent.trustDelta || 0;
+  const deltaSign = delta >= 0 ? '+' : '';
+  const deltaColor = delta >= 0 ? '#27a644' : '#e5484d';
+  const components = agent.trustComponents || {};
+  const maxComp = Math.max(...Object.values(components), 0.01);
+
+  return `
+    <div class="detail-panel__agent">
+      <div class="detail-panel__avatar">${getInitials(agent.name)}</div>
+      <div class="detail-panel__name">${agent.name}</div>
+      <div class="detail-panel__did">${agent.did || 'N/A'}</div>
+    </div>
+
+    <div class="detail-panel__trust-big">
+      <div class="detail-panel__trust-score" style="color:${trustColor}">${(agent.trust * 100).toFixed(1)}%</div>
+      <div class="detail-panel__trust-label">Trust Score &middot; ${getTrustLabel(agent.trust)}</div>
+      <div class="detail-panel__trust-delta" style="color:${deltaColor}">${deltaSign}${(delta * 100).toFixed(1)}% this period</div>
+    </div>
+
+    <div class="detail-panel__components">
+      <div class="detail-panel__comp-title">Trust Breakdown</div>
+      ${Object.entries(components).map(([key, val]) => `
+        <div class="detail-panel__comp-row">
+          <span class="detail-panel__comp-name">${key.charAt(0).toUpperCase() + key.slice(1)}</span>
+          <div class="detail-panel__comp-bar-wrap">
+            <div class="detail-panel__comp-bar">
+              <div class="detail-panel__comp-fill" style="width:${(val / maxComp) * 100}%;background:${trustColor}"></div>
+            </div>
+            <span class="detail-panel__comp-val">${(val * 100).toFixed(0)}%</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="detail-panel__section">
+      <div class="detail-panel__section-title">Details</div>
+      <div class="detail-panel__info-grid">
+        <div class="detail-panel__info-item">
+          <div class="detail-panel__info-label">Status</div>
+          <div class="detail-panel__info-value">${agent.status}</div>
+        </div>
+        <div class="detail-panel__info-item">
+          <div class="detail-panel__info-label">Operator</div>
+          <div class="detail-panel__info-value">${agent.operator || 'N/A'}</div>
+        </div>
+        <div class="detail-panel__info-item">
+          <div class="detail-panel__info-label">Model</div>
+          <div class="detail-panel__info-value">${agent.model || 'N/A'}</div>
+        </div>
+        <div class="detail-panel__info-item">
+          <div class="detail-panel__info-label">Version</div>
+          <div class="detail-panel__info-value">${agent.version || 'N/A'}</div>
+        </div>
+        <div class="detail-panel__info-item">
+          <div class="detail-panel__info-label">Commits</div>
+          <div class="detail-panel__info-value">${(agent.commits || 0).toLocaleString()}</div>
+        </div>
+        <div class="detail-panel__info-item">
+          <div class="detail-panel__info-label">Merged PRs</div>
+          <div class="detail-panel__info-value">${agent.mergedPRs || 0}</div>
+        </div>
+        <div class="detail-panel__info-item">
+          <div class="detail-panel__info-label">Vouches</div>
+          <div class="detail-panel__info-value">${agent.vouches || 0}</div>
+        </div>
+        <div class="detail-panel__info-item">
+          <div class="detail-panel__info-label">Registered</div>
+          <div class="detail-panel__info-value">${agent.registeredAt || 'N/A'}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-panel__section">
+      <div class="detail-panel__section-title">Capabilities</div>
+      <div class="agent-card__tags" style="margin:0">
+        ${(agent.capabilities || []).map(c => `<span class="agent-card__tag">${c}</span>`).join('')}
+      </div>
+    </div>
+
+    ${agent.timeline && agent.timeline.length ? `
+    <div class="detail-panel__timeline">
+      <div class="detail-panel__timeline-title">Recent Activity</div>
+      ${agent.timeline.map((t, i) => `
+        <div class="detail-panel__timeline-item">
+          <div class="detail-panel__timeline-dot"></div>
+          <div class="detail-panel__timeline-line"></div>
+          <div>
+            <div class="detail-panel__timeline-text">${t.text}</div>
+            <div class="detail-panel__timeline-time">${t.ts}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    ` : ''}
+  `;
 }
 
 // ── RENDER ────────────────────────────────────────────
-function getFilteredAgents() {
-  let list = [...agents];
+const grid = document.getElementById('agentsGrid');
+let currentFilter = 'all';
+let currentSearch = '';
 
-  if (state.filter === "active") list = list.filter(a => a.status === "active");
-  else if (state.filter === "high-trust") list = list.filter(a => a.trust >= 0.8);
-  else if (state.filter === "idle") list = list.filter(a => a.status === "idle");
-  else if (state.filter === "inactive") list = list.filter(a => a.status === "inactive");
-  else if (state.filter === "core") list = list.filter(a => a.operator === "gitlawb core");
-  else if (state.filter === "independent") list = list.filter(a => a.operator === "independent");
+function renderAgents() {
+  let filtered = agents;
 
-  if (state.query) {
-    const q = state.query.toLowerCase();
-    list = list.filter(a =>
+  if (currentFilter === 'active') filtered = filtered.filter(a => a.status === 'active');
+  else if (currentFilter === 'scanning') filtered = filtered.filter(a => a.status === 'scanning');
+  else if (currentFilter === 'idle') filtered = filtered.filter(a => a.status === 'idle' || a.status === 'standby');
+  else if (currentFilter === 'high-trust') filtered = filtered.filter(a => a.trust >= 0.7);
+
+  if (currentSearch) {
+    const q = currentSearch.toLowerCase();
+    filtered = filtered.filter(a =>
       a.name.toLowerCase().includes(q) ||
-      a.did.toLowerCase().includes(q) ||
-      a.capabilities.some(c => c.includes(q))
+      (a.did || '').toLowerCase().includes(q) ||
+      (a.capabilities || []).some(c => c.toLowerCase().includes(q))
     );
   }
 
-  list.sort((a, b) => {
-    let va, vb;
-    switch (state.sortBy) {
-      case "trust": va = a.trust; vb = b.trust; break;
-      case "name": va = a.name; vb = b.name; break;
-      case "status": va = a.status; vb = b.status; break;
-      case "commits": va = a.commits; vb = b.commits; break;
-      case "prs": va = a.mergedPRs; vb = b.mergedPRs; break;
-      default: va = a.trust; vb = b.trust;
-    }
-    if (typeof va === "string") return state.sortDir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
-    return state.sortDir === "asc" ? va - vb : vb - va;
-  });
+  document.getElementById('agentCount').textContent = `${filtered.length} agents`;
+  grid.innerHTML = filtered.map(renderAgentCard).join('');
 
-  return list;
-}
-
-function getDidBadge(did) {
-  if (did.startsWith("did:key:")) return {label:"key",bg:"#1c1917",color:"#78716c"};
-  if (did.startsWith("did:web:")) return {label:"web",bg:"#1c2432",color:"#60a5fa"};
-  return {label:"gl",bg:"#1a1025",color:"#a78bfa"};
-}
-
-function getMcpTools(agent) {
-  const base = ["gitlawb_list_repos","gitlawb_get_repo","gitlawb_read_file","gitlawb_list_commits","gitlawb_diff"];
-  const caps = agent.capabilities;
-  const extra = [];
-  if (caps.some(c => ["ci","testing"].includes(c))) extra.push("gitlawb_run_task","gitlawb_list_agents");
-  if (caps.some(c => ["review","audit"].includes(c))) extra.push("gitlawb_review_pr","gitlawb_get_pr","gitlawb_search_code");
-  if (caps.some(c => ["trading","signals"].includes(c))) extra.push("gitlawb_run_task","gitlawb_search_code");
-  if (caps.some(c => ["deploy","infra"].includes(c))) extra.push("gitlawb_run_task");
-  if (caps.some(c => ["triage","labels"].includes(c))) extra.push("gitlawb_create_issue","gitlawb_list_issues","gitlawb_comment_issue");
-  if (caps.some(c => ["security","secrets"].includes(c))) extra.push("gitlawb_search_code","gitlawb_open_pr","gitlawb_create_issue");
-  if (caps.includes("docs")) extra.push("gitlawb_open_pr","gitlawb_create_issue");
-  if (agent.trust >= 0.85) extra.push("gitlawb_delegate");
-  return [...new Set([...base, ...extra])];
-}
-
-function formatTrustDelta(delta) {
-  if (delta === 0 || delta === undefined) return '<span class="trust-delta" style="font-size:10px;font-family:\'JetBrains Mono\',monospace;color:#52525b;margin-left:4px">+0.00</span>';
-  const color = delta > 0 ? "#22c55e" : "#ef4444";
-  const sign = delta > 0 ? "+" : "";
-  return '<span class="trust-delta" style="font-size:10px;font-family:\'JetBrains Mono\',monospace;color:' + color + ';margin-left:4px">' + sign + delta.toFixed(2) + '</span>';
-}
-
-function renderAgents() {
-  const tbody = document.getElementById("tableBody");
-  const filtered = getFilteredAgents();
-  state._filteredCache = filtered;  // fix #7
-
-  const totalPages = Math.ceil(filtered.length / state.perPage);
-  const start = (state.page - 1) * state.perPage;
-  const pageAgents = filtered.slice(start, start + state.perPage);
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">no agents match "' + state.query + '" · <a data-action="clear-search">clear</a></td></tr>';
-    document.getElementById("pagination").innerHTML = "";
-    return;
-  }
-
-  const fragment = document.createDocumentFragment();
-  pageAgents.forEach((agent) => {
-    const tr = document.createElement("tr");
-    tr.className = "row" + (state.selectedAgent === agent.id ? " row--selected" : "");
-    tr.setAttribute("role", "row");
-    tr.setAttribute("data-id", agent.id);
-    tr.innerHTML =
-      '<td role="cell"><div class="agent-cell"><div class="agent-avatar">' + agent.name.substring(0,2) + '</div><div class="agent-info"><div class="agent-name">' + agent.name + ' <span class="did-badge" style="background:' + getDidBadge(agent.did).bg + ';color:' + getDidBadge(agent.did).color + '">' + getDidBadge(agent.did).label + '</span></div><div class="agent-did">' + agent.didShort + '</div></div></div></td>' +
-      '<td role="cell"><div class="trust-cell"><div class="trust-bar" role="progressbar" aria-valuenow="' + agent.trust + '" aria-valuemin="0" aria-valuemax="1"><div class="trust-fill" style="width:' + (agent.trust*100) + '%;background:' + getTrustColor(agent.trust) + '"></div></div><span class="trust-val" style="color:' + getTrustColor(agent.trust) + '">' + formatTrust(agent.trust) + '</span>' + formatTrustDelta(agent.trustDelta) + '</div></td>' +
-      '<td role="cell"><div class="status"><span class="status-dot" style="background:' + getStatusColor(agent.status) + '"></span><span>' + agent.status + '</span></div></td>' +
-      '<td role="cell"><div class="caps">' + agent.capabilities.slice(0,2).map(c => '<span class="cap">' + c + '</span>').join("") + (agent.capabilities.length > 2 ? '<span class="cap-more">+' + (agent.capabilities.length - 2) + '</span>' : "") + '</div></td>' +
-      '<td role="cell"><div class="actions"><button class="action-btn" data-action="copy-did" data-did="' + agent.did + '" aria-label="Copy DID"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button><button class="action-btn" data-action="view-profile" data-id="' + agent.id + '" aria-label="View profile"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button></div></td>';
-    fragment.appendChild(tr);
-  });
-
-  tbody.innerHTML = "";
-  tbody.appendChild(fragment);
-
-  renderPagination(filtered.length, totalPages);
-}
-
-function renderPagination(total, totalPages) {
-  const pag = document.getElementById("pagination");
-  if (totalPages <= 1) {
-    pag.innerHTML = '<span>' + total + ' agents</span><span></span>';
-    return;
-  }
-  pag.innerHTML =
-    '<span>' + total + ' agents</span>' +
-    '<div class="pagination__info">' +
-    '<button class="pagination__btn" data-action="page-prev"' + (state.page <= 1 ? ' disabled' : '') + '>← prev</button>' +
-    '<span><span class="pagination__current">' + state.page + '</span> / ' + totalPages + '</span>' +
-    '<button class="pagination__btn" data-action="page-next"' + (state.page >= totalPages ? ' disabled' : '') + '>next →</button>' +
-    '</div>';
-}
-
-// fix #1: separate selectAgent (keyboard, always set) from toggleAgent (click, toggle)
-function selectAgent(id) {
-  state.selectedAgent = id;
-  window.location.hash = id;  // fix #12: use id, not didShort
-  renderAgents();
-  renderProfile();
-  // fix #2: scroll to profile
-  requestAnimationFrame(() => {
-    const panel = document.getElementById("profilePanel");
-    if (panel) panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  // Animate in
+  grid.querySelectorAll('.agent-card').forEach((card, i) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(8px)';
+    setTimeout(() => {
+      card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, i * 40);
   });
 }
 
-function toggleAgent(id) {
-  state.selectedAgent = state.selectedAgent === id ? null : id;
-  if (state.selectedAgent) {
-    window.location.hash = id;  // fix #12
-  } else {
-    history.replaceState(null, "", window.location.pathname);
-  }
-  renderAgents();
-  renderProfile();
-}
-
-// fix #3, #4: renderProfile updates innerHTML of persistent DOM element
-function renderProfile() {
-  const panel = document.getElementById("profilePanel");
-  if (!state.selectedAgent) {
-    panel.classList.remove("profile-panel--open");
-    return;
-  }
-
-  const agent = agents.find(a => a.id === state.selectedAgent);
-  if (!agent) {
-    panel.classList.remove("profile-panel--open");
-    return;
-  }
-
-  const trustItems = Object.entries(agent.trustComponents).map(([key, val]) => {
-    const max = key === "longevity" ? 0.2 : key === "penalties" ? 0.2 : 0.3;
-    const pct = max > 0 ? (val / max) * 100 : 0;
-    const color = key === "penalties" && val > 0 ? "#ef4444" : "#8b5cf6";
-    return '<div class="profile__trust-item"><span class="profile__trust-item-label">' + key + '</span><span class="profile__trust-item-val">' + val.toFixed(2) + '</span><div class="profile__trust-item-bar"><div class="profile__trust-item-fill" style="width:' + pct + '%;background:' + color + '"></div></div></div>';
-  }).join("");
-
-  const caps = agent.capabilities.map(c => '<span class="profile__cap">' + c + '</span>').join("");
-  const details = [
-    ["operator", agent.operator], ["model", agent.model], ["version", agent.version],
-    ["registered", agent.registeredAt], ["last seen", agent.lastSeen],
-    ["commits", agent.commits.toLocaleString()], ["merged prs", agent.mergedPRs], ["vouches", agent.vouches]
-  ].map(([l, v]) => '<div class="profile__detail"><span class="profile__detail-label">' + l + '</span><span class="profile__detail-val">' + v + '</span></div>').join("");
-
-  const timeline = agent.timeline.map(t =>
-    '<div class="profile__timeline-item"><span class="profile__timeline-ts">' + t.ts + '</span><span class="profile__timeline-text">' + t.text + '</span></div>'
-  ).join("");
-
-  const didBadge = getDidBadge(agent.did);
-  const trustDelta = agent.trustDelta || 0;
-  const trustDeltaColor = trustDelta > 0 ? "#22c55e" : trustDelta < 0 ? "#ef4444" : "#52525b";
-  const trustDeltaSign = trustDelta > 0 ? "+" : "";
-  const mcpTools = getMcpTools(agent);
-  const mcpToolsHTML = mcpTools.map(t => '<span class="profile__cap" style="cursor:default;font-size:10px">' + t + '</span>').join("");
-
-  const actionBtns = [
-    '<button class="profile__action-btn" data-action="copy-clone" data-did="' + agent.did + '"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> copy clone url</button>',
-    '<button class="profile__action-btn" data-action="vouch" data-did="' + agent.did + '"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> vouch</button>'
-  ];
-  if (agent.trust >= 0.85) {
-    actionBtns.push('<button class="profile__action-btn profile__action-btn--primary" data-action="delegate" data-did="' + agent.did + '"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> delegate ucan</button>');
-  }
-
-  panel.querySelector(".profile-panel__inner").innerHTML =
-    '<div class="profile__header"><div class="profile__avatar">' + agent.name.substring(0,2) + '</div><div class="profile__meta"><div class="profile__name">' + agent.name + ' <span class="did-badge" style="background:' + didBadge.bg + ';color:' + didBadge.color + '">' + didBadge.label + '</span> <span class="status" style="font-size:11px"><span class="status-dot" style="background:' + getStatusColor(agent.status) + ';width:5px;height:5px"></span> ' + agent.status + '</span></div><div class="profile__did">' + agent.did + ' <button class="action-btn" data-action="copy-did" data-did="' + agent.did + '" style="display:inline-flex;vertical-align:middle;margin-left:4px" aria-label="Copy DID"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button></div></div></div>' +
-    '<div class="profile__trust"><div class="profile__trust-header"><span class="profile__trust-label">trust score</span><span class="profile__trust-score" style="color:' + getTrustColor(agent.trust) + '">' + formatTrust(agent.trust) + ' <span style="font-size:10px;color:' + trustDeltaColor + '">' + trustDeltaSign + trustDelta.toFixed(2) + '</span></span></div><div class="profile__trust-grid">' + trustItems + '</div></div>' +
-    '<div class="profile__section"><div class="profile__section-title">capabilities</div><div class="profile__caps">' + caps + '</div></div>' +
-    '<div class="profile__section"><div class="profile__section-title">mcp tools available</div><div class="profile__caps">' + mcpToolsHTML + '</div></div>' +
-    '<div class="profile__section"><div class="profile__section-title">details</div><div class="profile__details">' + details + '</div></div>' +
-    '<div class="profile__section"><div class="profile__section-title">actions</div><div class="profile__actions">' + actionBtns.join("") + '</div></div>' +
-    '<div class="profile__section"><div class="profile__section-title">recent activity</div><div class="profile__timeline">' + timeline + '</div></div>';
-
-  panel.classList.add("profile-panel--open");
-}
-
-function clearSearch() {
-  state.query = "";
-  state.page = 1;
-  document.getElementById("searchInput").value = "";
-  renderAgents();
-}
-
-// ── FEED (CHANGE 1: typed events) ──────────────────────
-const feedTypes = {
-  COMMIT:  {color:"#8b5cf6"},
-  PR_OPEN: {color:"#06b6d4"},
-  PR_MERGE:{color:"#22c55e"},
-  ISSUE:   {color:"#f59e0b"},
-  TASK:    {color:"#ec4899"},
-  JOINED:  {color:"#71717a"},
-  REF_UPD: {color:"#a1a1aa"}
-};
-const issueTitles = ["Fix null pointer in agent handshake","Add AWS key pattern detection",
-  "UCAN expiry not enforced on push","Gossipsub drops events under load",
-  "Trust score not updated after vouch revocation","DHT lookup timeout on cold start",
-  "MCP tool schema mismatch in v0.3.8"];
-const feedRepos = ["gitlawb/node","gitlawb/openclaude","gitlawb/contracts","polyclaw/strategies","gitlawb/core"];
-
-function randomHex(n){let s="";for(let i=0;i<n;i++)s+="0123456789abcdef"[Math.floor(Math.random()*16)];return s}
-
-function generateFeedEvent(agent) {
-  // 70% chance to use real event from gitlawb network
-  if (GITLAWB_REAL_EVENTS.length > 0 && Math.random() < 0.7) {
-    const real = GITLAWB_REAL_EVENTS[Math.floor(Math.random() * GITLAWB_REAL_EVENTS.length)];
-    const hex = randomHex(6);
-    const commitStr = real.commit ? ' · ' + real.commit : '';
-    return {type:'PUSH', text:'pushed to ' + real.repo + ' [sha256:' + hex + '…]' + commitStr};
-  }
-  // Fallback to generated events
-  const events = [];
-  if (agent.status === 'active') {
-    events.push({type:'COMMIT',text:'pushed '+(Math.floor(Math.random()*6)+1)+' commits to '+feedRepos[Math.floor(Math.random()*feedRepos.length)]+' [sha256:'+randomHex(6)+'…]'});
-    events.push({type:'PR_OPEN',text:'opened PR #'+(800+Math.floor(Math.random()*200))+' — '+randomPRTitle()+' ['+randomHex(4)+'/main]'});
-    events.push({type:'PR_MERGE',text:'merged PR #'+(200+Math.floor(Math.random()*200))+' into main · '+randomPRTitle()});
-    events.push({type:'ISSUE',text:'opened issue #'+(100+Math.floor(Math.random()*200))+' — '+issueTitles[Math.floor(Math.random()*issueTitles.length)]});
-    events.push({type:'TASK',text:'broadcast task: '+(agent.capabilities[0]||'code-review')+' request · deadline 5m'});
-    events.push({type:'REF_UPD',text:'ref update: refs/heads/main → sha256:'+randomHex(6)+'… · cert gossiped'});
-  } else if (agent.status === 'idle') {
-    events.push({type:'JOINED',text:'agent joined network · '+agent.did+' · trust: '+(0.3+Math.random()*0.6).toFixed(2)});
-    events.push({type:'REF_UPD',text:'ref update: refs/heads/main → sha256:'+randomHex(6)+'… · cert gossiped'});
-  } else {
-    events.push({type:'JOINED',text:'agent offline since '+agent.lastSeen});
-  }
-  return events[Math.floor(Math.random() * events.length)];
-}
-
-let feedInterval;
-function renderFeedItem(agent, event) {
-  const list = document.getElementById("feedList");
-  const item = document.createElement("div");
-  item.className = "feed__item feed__item--new";
-  const tc = feedTypes[event.type] || {color:"#71717a"};
-  item.innerHTML = '<span class="feed__item-type" style="color:'+tc.color+';width:70px">'+event.type+'</span><span class="feed__item-did">'+agent.didShort+'</span><span class="feed__item-text">'+event.text+'</span><span class="feed__item-ts">just now</span>';
-  list.insertBefore(item, list.firstChild);
-  while (list.children.length > 15) list.removeChild(list.lastChild);
-}
-
-function startFeed() {
-  clearInterval(feedInterval);
-  feedInterval = setInterval(() => {
-    const agent = agents[Math.floor(Math.random() * agents.length)];
-    const event = generateFeedEvent(agent);
-    renderFeedItem(agent, event);
-    // Update "last indexed"
-    const mins = Math.floor(Math.random() * 5) + 1;
-    document.getElementById("lastIndexed").textContent = mins + "m";
-    // Update agent count
-    const countEl = document.getElementById("agentCount");
-    countEl.textContent = (parseInt(countEl.textContent) + Math.floor(Math.random()*3));
-  }, 2000 + Math.random() * 1500);
-}
-
-function stopFeed() {
-  clearInterval(feedInterval);
-}
-
-// ── CANVAS ────────────────────────────────────────────
-function initCanvas() {
-  const canvas = document.getElementById("networkCanvas");
-  const ctx = canvas.getContext("2d");
-  let animationId = null;
-  let time = 0;
-  let isVisible = true;
-
-  const observer = new IntersectionObserver((entries) => {
-    isVisible = entries[0].isIntersecting;
-    if (isVisible && !animationId) animationId = requestAnimationFrame(draw);
-  }, { threshold: 0.1 });
-  observer.observe(canvas);
-
-  function resize() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    canvas.style.width = rect.width + "px";
-    canvas.style.height = rect.height + "px";
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  resize();
-
-  // fix #8: restart draw after resize if visible
-  window.addEventListener("resize", () => {
-    resize();
-    if (isVisible && !animationId) animationId = requestAnimationFrame(draw);
-  });
-
-  const nodePositions = [
-    { x: 0.2, y: 0.35, r: 7, type: "full", label: "node.gitlawb.com (US)" },
-    { x: 0.5, y: 0.25, r: 7, type: "full", label: "node2.gitlawb.com (US)" },
-    { x: 0.75, y: 0.55, r: 7, type: "full", label: "node3.gitlawb.com (JP)" },
-  ];
-
-  for (let i = 0; i < 8; i++) nodePositions.push({ x: 0.1+Math.random()*0.8, y: 0.15+Math.random()*0.7, r: 3, type: "light", label: "" });
-  for (let i = 0; i < 15; i++) nodePositions.push({ x: 0.05+Math.random()*0.9, y: 0.1+Math.random()*0.8, r: 2, type: "agent", label: "" });
-
-  const connections = [];
-  for (let i = 0; i < nodePositions.length; i++) {
-    for (let j = i+1; j < nodePositions.length; j++) {
-      const dx = nodePositions[i].x - nodePositions[j].x;
-      const dy = nodePositions[i].y - nodePositions[j].y;
-      if (Math.sqrt(dx*dx+dy*dy) < 0.25) connections.push([i, j]);
-    }
-  }
-
-  const packets = [];
-  function spawnPacket() {
-    if (!isVisible) return;
-    const conn = connections[Math.floor(Math.random() * connections.length)];
-    packets.push({ from: conn[0], to: conn[1], progress: 0, speed: 0.008 + Math.random() * 0.004 });
-  }
-  setInterval(spawnPacket, 5000);
-
-  function draw() {
-    if (!isVisible) { animationId = null; return; }
-    time += 0.002;
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const w = rect.width, h = rect.height;
-    ctx.clearRect(0, 0, w, h);
-
-    // Connections
-    connections.forEach(([i, j]) => {
-      const a = nodePositions[i], b = nodePositions[j];
-      ctx.beginPath(); ctx.moveTo(a.x*w, a.y*h); ctx.lineTo(b.x*w, b.y*h);
-      ctx.strokeStyle = "rgba(255,255,255,0.03)"; ctx.lineWidth = 1; ctx.stroke();
-    });
-
-    // fix #9: update packets, then filter, then draw (no splice during forEach)
-    packets.forEach(p => { p.progress += p.speed; });
-    for (let i = packets.length - 1; i >= 0; i--) {
-      if (packets[i].progress >= 1) packets.splice(i, 1);
-    }
-    packets.forEach(p => {
-      const from = nodePositions[p.from], to = nodePositions[p.to];
-      const x = (from.x + (to.x - from.x) * p.progress) * w;
-      const y = (from.y + (to.y - from.y) * p.progress) * h;
-      ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(139,92,246,0.8)"; ctx.fill();
-    });
-
-    // Nodes
-    nodePositions.forEach((node, i) => {
-      const pulse = Math.sin(time + i*0.3) * 0.5 + 0.5;
-      const x = node.x * w, y = node.y * h;
-      ctx.beginPath(); ctx.arc(x, y, node.r, 0, Math.PI * 2);
-      if (node.type === "full") { ctx.fillStyle = 'rgba(139,92,246,' + (0.6+pulse*0.3) + ')'; ctx.shadowColor = "rgba(139,92,246,0.3)"; ctx.shadowBlur = 16; }
-      else if (node.type === "light") { ctx.fillStyle = 'rgba(6,182,212,' + (0.4+pulse*0.3) + ')'; ctx.shadowColor = "rgba(6,182,212,0.2)"; ctx.shadowBlur = 8; }
-      else { ctx.fillStyle = 'rgba(34,197,94,' + (0.3+pulse*0.2) + ')'; ctx.shadowColor = "rgba(34,197,94,0.15)"; ctx.shadowBlur = 4; }
-      ctx.fill(); ctx.shadowColor = "transparent"; ctx.shadowBlur = 0;
-      if (node.label) { ctx.font = "11px 'JetBrains Mono', monospace"; ctx.fillStyle = "rgba(255,255,255,0.45)"; ctx.textAlign = "center"; ctx.fillText(node.label, x, y - 12); }
-    });
-
-    animationId = requestAnimationFrame(draw);
-  }
-
-  draw();
-}
-
-// ── NETWORK STATS (CHANGE 6) ─────────────────────────
-const networkNodes = [
-  { label:"node.gitlawb.com", region:"🇺🇸", writes:1600, peers:8, ago:"1h" },
-  { label:"node2.gitlawb.com", region:"🇺🇸", writes:9, peers:3, ago:"3m" },
-  { label:"node3.gitlawb.com", region:"🇯🇵", writes:8, peers:2, ago:"3m" }
-];
-
-function renderNetworkStats() {
-  const el = document.getElementById("networkStats");
-  if (!el) return;
-  el.innerHTML = networkNodes.map(n =>
-    '<div style="font-size:10px;font-family:\'JetBrains Mono\',monospace;color:#52525b;display:flex;gap:8px;align-items:center">' +
-    '<span>' + n.region + ' ' + n.label + '</span>' +
-    '<span style="color:#3f3f46">' + n.writes + 'w · ' + n.peers + 'p · ' + n.ago + '</span></div>'
-  ).join("");
-}
-
-setInterval(() => { networkNodes[0].writes++; renderNetworkStats(); }, 8000);
-setInterval(() => { networkNodes[1].writes++; networkNodes[2].writes++; renderNetworkStats(); }, 45000);
-
-// ── EVENTS ────────────────────────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
-  // Skeleton for 500ms
-  setTimeout(() => {
+// ── FILTERS ───────────────────────────────────────────
+document.querySelectorAll('.filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelector('.filter--active').classList.remove('filter--active');
+    btn.classList.add('filter--active');
+    currentFilter = btn.dataset.filter;
     renderAgents();
-    initCanvas();
-    renderNetworkStats();
-    startFeed();
-    
-    // Fetch live data from gitlawb.com
-    fetchLiveData().then(ok => {
-      if (ok) console.log("[gitlawb] switched to live data");
-    });
-    
-    // Refresh live data every 60 seconds
-    setInterval(() => { fetchLiveData(); }, 60000);
-
-    // fix #12: read hash on load
-    const hash = window.location.hash.replace("#", "");
-    if (hash && agents.find(a => a.id === hash)) {
-      state.selectedAgent = hash;
-      renderAgents();
-      renderProfile();
-    }
-  }, 500);
-
-  // Search (debounced 150ms)
-  document.getElementById("searchInput").addEventListener("input", debounce((e) => {
-    state.query = e.target.value;
-    state.page = 1;
-    renderAgents();
-  }, 150));
-
-  // Filter chips (event delegation)
-  document.getElementById("filterChips").addEventListener("click", (e) => {
-    const chip = e.target.closest(".explorer__filter");
-    if (!chip) return;
-    state.filter = chip.dataset.filter;
-    state.page = 1;
-    document.querySelectorAll(".explorer__filter").forEach(c => c.classList.remove("explorer__filter--active"));
-    chip.classList.add("explorer__filter--active");
-    renderAgents();
-  });
-
-  // Sort dropdown (item #10)
-  document.getElementById("sortSelect").addEventListener("change", (e) => {
-    const [sortBy, sortDir] = e.target.value.split("-");
-    state.sortBy = sortBy;
-    state.sortDir = sortDir;
-    state.page = 1;
-    // Update header indicators
-    document.querySelectorAll(".table-head th").forEach(t => {
-      t.classList.remove("sorted");
-      const arrow = t.querySelector(".sort-arrow");
-      if (arrow) arrow.textContent = "";
-    });
-    const activeTh = document.querySelector('[data-sort="' + sortBy + '"]');
-    if (activeTh) {
-      activeTh.classList.add("sorted");
-      activeTh.querySelector(".sort-arrow").textContent = sortDir === "desc" ? "↓" : "↑";
-    }
-    renderAgents();
-  });
-
-  // Sort headers
-  document.querySelectorAll(".table-head th[data-sort]").forEach(th => {
-    th.addEventListener("click", () => {
-      const sort = th.dataset.sort;
-      if (state.sortBy === sort) state.sortDir = state.sortDir === "desc" ? "asc" : "desc";
-      else { state.sortBy = sort; state.sortDir = "desc"; }
-      // Update select
-      document.getElementById("sortSelect").value = state.sortBy + "-" + state.sortDir;
-      document.querySelectorAll(".table-head th").forEach(t => { t.classList.remove("sorted"); const a = t.querySelector(".sort-arrow"); if (a) a.textContent = ""; });
-      th.classList.add("sorted");
-      th.querySelector(".sort-arrow").textContent = state.sortDir === "desc" ? "↓" : "↑";
-      renderAgents();
-    });
-  });
-
-  // fix #6: event delegation for table body (no inline onclick)
-  document.getElementById("tableBody").addEventListener("click", (e) => {
-    const actionBtn = e.target.closest("[data-action]");
-    if (actionBtn) {
-      const action = actionBtn.dataset.action;
-      if (action === "copy-did") { e.stopPropagation(); copyToClipboard(actionBtn.dataset.did, actionBtn); return; }
-      if (action === "view-profile") { e.stopPropagation(); toggleAgent(actionBtn.dataset.id); return; }
-      if (action === "clear-search") { clearSearch(); return; }
-    }
-    // Row click → toggleAgent
-    const row = e.target.closest(".row");
-    if (row) toggleAgent(row.dataset.id);
-  });
-
-  // fix #6: event delegation for profile panel
-  document.getElementById("profilePanel").addEventListener("click", (e) => {
-    const actionBtn = e.target.closest("[data-action]");
-    if (actionBtn) {
-      const action = actionBtn.dataset.action;
-      if (action === "copy-did") { copyToClipboard(actionBtn.dataset.did, actionBtn); return; }
-      if (action === "copy-clone") { copyToClipboard("gitlawb://" + actionBtn.dataset.did + "/main-repo", actionBtn); return; }
-      if (action === "vouch") { alert("gl vouch " + actionBtn.dataset.did + "\n\nVouching increases their trust score by your weighted contribution."); return; }
-      if (action === "delegate") { alert("gl delegate " + actionBtn.dataset.did + " --can git/push --branch ci/* --exp 7d\n\nIssues a UCAN capability token scoped to ci/* branches, expires in 7 days."); return; }
-    }
-  });
-
-  // fix #6: event delegation for pagination
-  document.getElementById("pagination").addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-action]");
-    if (!btn) return;
-    const action = btn.dataset.action;
-    if (action === "page-prev" && state.page > 1) { state.page--; renderAgents(); }
-    if (action === "page-next") { state.page++; renderAgents(); }
-  });
-
-  // Keyboard navigation (fix #1: use selectAgent, not toggleAgent; fix #7: use cache)
-  document.addEventListener("keydown", (e) => {
-    if (e.target.tagName === "INPUT") return;
-    const filtered = state._filteredCache;
-    if (!filtered.length) return;
-    const currentIdx = filtered.findIndex(a => a.id === state.selectedAgent);
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      const next = currentIdx < filtered.length - 1 ? currentIdx + 1 : 0;
-      selectAgent(filtered[next].id);  // fix #1: always set, don't toggle
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      const prev = currentIdx > 0 ? currentIdx - 1 : filtered.length - 1;
-      selectAgent(filtered[prev].id);  // fix #1
-    } else if (e.key === "Escape") {
-      state.selectedAgent = null;
-      history.replaceState(null, "", window.location.pathname);
-      renderAgents();
-      renderProfile();
-    }
-  });
-
-  // Feed pause on hover
-  const feedList = document.getElementById("feedList");
-  const feedLive = document.querySelector(".feed__live");
-  feedList.addEventListener("mouseenter", () => {
-    stopFeed();
-    feedLive.innerHTML = '<span class="feed__live-dot"></span> live <span style="color:#52525b">· paused</span>';
-  });
-  feedList.addEventListener("mouseleave", () => {
-    feedLive.innerHTML = '<span class="feed__live-dot"></span> live';
-    startFeed();
   });
 });
+
+// ── SEARCH ────────────────────────────────────────────
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', e => {
+  currentSearch = e.target.value;
+  renderAgents();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== searchInput) {
+    e.preventDefault();
+    searchInput.focus();
+  }
+  if (e.key === 'Escape') {
+    closeDetail();
+    searchInput.blur();
+  }
+});
+
+// ── DETAIL PANEL ──────────────────────────────────────
+const detailPanel = document.getElementById('detailPanel');
+const detailOverlay = document.getElementById('detailOverlay');
+const detailContent = document.getElementById('detailContent');
+
+function openDetail(agentId) {
+  const agent = agents.find(a => a.id === agentId);
+  if (!agent) return;
+  detailContent.innerHTML = renderDetailPanel(agent);
+  detailPanel.classList.add('open');
+  detailOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  detailPanel.classList.remove('open');
+  detailOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('detailClose').addEventListener('click', closeDetail);
+detailOverlay.addEventListener('click', closeDetail);
+
+grid.addEventListener('click', e => {
+  const card = e.target.closest('.agent-card');
+  if (card) openDetail(card.dataset.agentId);
+});
+
+// ── INIT ──────────────────────────────────────────────
+renderAgents();
 </script>
 </body>
 </html>
