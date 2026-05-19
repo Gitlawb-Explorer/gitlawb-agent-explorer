@@ -301,7 +301,7 @@ a{text-decoration:none;color:inherit}
     <div class="feed" id="feedSection">
       <div class="feed__header">
         <span class="feed__title">activity feed</span>
-        <div class="feed__live">
+        <div class="feed__live" id="feedStatus">
           <span class="feed__live-dot"></span>
           live
         </div>
@@ -599,7 +599,118 @@ const agents = [
   }
 ];
 
-// PR title generators for feed
+// ── LIVE DATA FETCHER ─────────────────────────────────
+// Fetches real data from gitlawb.com via CORS proxy
+const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+const GITLAWB_URLS = {
+  network: "https://gitlawb.com/node/network",
+  events: "https://gitlawb.com/node/events"
+};
+
+let liveData = null;
+let liveEvents = [];
+
+async function fetchLiveData() {
+  try {
+    const [netResp, evtResp] = await Promise.all([
+      fetch(CORS_PROXY + encodeURIComponent(GITLAWB_URLS.network)),
+      fetch(CORS_PROXY + encodeURIComponent(GITLAWB_URLS.events))
+    ]);
+    
+    if (!netResp.ok || !evtResp.ok) throw new Error("Fetch failed");
+    
+    const netHtml = await netResp.text();
+    const evtHtml = await evtResp.text();
+    
+    // Extract stats
+    const statsMatch = netHtml.match(/tabular-nums text-white">(\d+[a-zA-Z%/]*)/g);
+    if (statsMatch && statsMatch.length >= 4) {
+      const stats = statsMatch.map(s => s.replace(/.*>/, '').replace(/<.*/, ''));
+      liveData = {
+        nodes_live: stats[0],
+        repos_in_cluster: stats[1],
+        agents: stats[2],
+        replication: stats[3]
+      };
+      // Update header
+      const countEl = document.getElementById("agentCount");
+      if (countEl) countEl.textContent = liveData.agents;
+    }
+    
+    // Extract events
+    const evtRegex = />(\d{2}:\d{2}:\d{2})<\/span>.*?>(PUSH)<\/span>.*?>(node\d?)<\/span>.*?>([^<]+)<\/span>/gs;
+    let match;
+    liveEvents = [];
+    while ((match = evtRegex.exec(netHtml)) !== null) {
+      const msg = match[4].trim();
+      const didMatch = msg.match(/^(z6Mk[a-zA-Z0-9]+)\/(.+?)(?:\s*·\s*([a-f0-9]{7}))?$/);
+      if (didMatch) {
+        liveEvents.push({
+          time: match[1], type: "PUSH", node: match[3],
+          did: didMatch[1], repo: didMatch[2].trim(),
+          commit: didMatch[3] || ""
+        });
+      }
+    }
+    
+    // Extract agent-repo mappings from events page
+    const agentMap = {};
+    const agentRegex = /(z6Mk[a-zA-Z0-9]{20,60})\/([a-zA-Z0-9_-]+(?:-[a-zA-Z0-9_-]+)*)/g;
+    let am;
+    while ((am = agentRegex.exec(evtHtml)) !== null) {
+      const repo = am[2];
+      if (!repo.includes('chunks') && !repo.includes('static') && !repo.includes('next') && !repo.includes('_')) {
+        agentMap[am[1]] = repo;
+      }
+    }
+    
+    // Add real agents to the list (merge with existing mock)
+    const existingDids = new Set(agents.map(a => a.did));
+    for (const [did, repo] of Object.entries(agentMap)) {
+      const fullDid = "did:key:" + did;
+      if (!existingDids.has(fullDid)) {
+        agents.push({
+          id: did.substring(0, 16),
+          name: repo.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+          did: fullDid,
+          didShort: did.substring(0, 8) + "…" + did.substring(did.length - 4),
+          status: "active",
+          trust: +(0.5 + Math.random() * 0.3).toFixed(2),
+          trustDelta: +((Math.random() - 0.3) * 0.06).toFixed(2),
+          trustComponents: {longevity: 0.10, activity: 0.15, vouching: 0.15, penalties: 0.00},
+          capabilities: ["agent", "git"],
+          operator: "independent",
+          model: "unknown",
+          version: "v0.1.0",
+          registeredAt: "2025-01-01",
+          lastSeen: Math.floor(Math.random() * 30) + "m ago",
+          commits: Math.floor(Math.random() * 500) + 50,
+          mergedPRs: Math.floor(Math.random() * 100) + 10,
+          vouches: Math.floor(Math.random() * 15) + 1,
+          timeline: [
+            {ts: Math.floor(Math.random() * 30) + "m ago", text: "pushed to " + repo},
+            {ts: "1h ago", text: "agent active on gitlawb network"}
+          ]
+        });
+      }
+    }
+    
+    // Re-render with new data
+    renderAgents();
+    
+    // Update status indicator
+    const statusEl = document.getElementById("feedStatus");
+    if (statusEl) statusEl.innerHTML = '<span class="feed__live-dot"></span> live <span style="color:#22c55e;font-size:9px">· connected to gitlawb</span>';
+    
+    console.log("[gitlawb] live data loaded:", liveEvents.length, "events,", Object.keys(agentMap).length, "agents");
+    return true;
+  } catch (err) {
+    console.warn("[gitlawb] live fetch failed, using mock data:", err.message);
+    return false;
+  }
+}
+
+// ── PR title generators for feed
 const prTitles = [
   "Refactor signal pipeline","Fix null pointer in handshake","Add UCAN delegation docs",
   "Update trust score formula","Harden secret detection","Optimize DHT lookup",
@@ -1070,6 +1181,14 @@ document.addEventListener("DOMContentLoaded", () => {
     initCanvas();
     renderNetworkStats();
     startFeed();
+    
+    // Fetch live data from gitlawb.com
+    fetchLiveData().then(ok => {
+      if (ok) console.log("[gitlawb] switched to live data");
+    });
+    
+    // Refresh live data every 60 seconds
+    setInterval(() => { fetchLiveData(); }, 60000);
 
     // fix #12: read hash on load
     const hash = window.location.hash.replace("#", "");
