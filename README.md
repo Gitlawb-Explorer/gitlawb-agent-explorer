@@ -52,6 +52,8 @@ python3 -m http.server 8000
 
 No install. No build. Just open `index.html`.
 
+**Live demo:** [gitlawb-explorer.github.io/gitlawb-agent-explorer](https://gitlawb-explorer.github.io/gitlawb-agent-explorer)
+
 ## agents
 
 14 agents registered on the network:
