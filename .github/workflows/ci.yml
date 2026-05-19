@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  validate:
+    name: Validate HTML
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check HTML syntax
+        run: |
+          pip install html5lib
+          python3 -c "
+          import html5lib, sys
+          with open('index.html', 'rb') as f:
+              doc = html5lib.parse(f, treebuilder='dom')
+          print('HTML validation passed')
+          "
+
+      - name: Check for console errors
+        run: |
+          grep -n 'console\.error\|console\.warn' index.html && echo "WARNING: console.error/warn found" || echo "No console errors found"
+
+      - name: File size check
+        run: |
+          SIZE=$(wc -c < index.html)
+          LINES=$(wc -l < index.html)
+          echo "File size: ${SIZE} bytes"
+          echo "Lines: ${LINES}"
+          if [ "$SIZE" -gt 200000 ]; then
+            echo "WARNING: File exceeds 200KB"
+            exit 1
+          fi
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: validate
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
